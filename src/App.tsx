@@ -40,7 +40,7 @@ function PlaneShader() {
   };
   const mesh1 = useRef<THREE.Mesh>(null);
   const mesh2 = useRef<THREE.Mesh>(null);
-
+  // Test comment
 
   useFrame((state, delta) => {
     uniform.uTime.value += delta;
