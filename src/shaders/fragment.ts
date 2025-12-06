@@ -41,13 +41,15 @@ const fShader = /* glsl */`
         float diffuse = dot(normal, vec3(0.9));
         
         vec2 rand = hash22(vec2(floor(diffuse*10.)));
-        vec2 strength=vec2(sign((rand.x-.5))+(rand.x-.5)*.6,sign((rand.y-.5))+(rand.y-.5)*.6);
+        vec2 strength=vec2(
+            sign((rand.x-.5))+(rand.x-.5)*5.,
+            sign((rand.y-.5))+(rand.y-.5)*5.);
 
         vec2 newUv = strength*gl_FragCoord.xy/vec2(1000.0);
 
         vec3 camPos = normalize(vPosition - cameraPosition); // Vector of camera normalized
         
-        float F = fresnel(0.3, 1.3, 1.5, camPos, vNormal);
+        float F = fresnel(0.3, 1.3, 1.5, camPos, normal);
         vec3 refraction = refract(eyeVector, normal, 1.0/3.0);
         
         newUv += refraction.xy;
