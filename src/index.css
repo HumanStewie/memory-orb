@@ -6,6 +6,7 @@
     top:0;
     left:0;
 }
+html, body {margin: 0; height: 100%; overflow: hidden}
 #wcontainer {
     position:absolute;
     overflow: hidden;
@@ -46,7 +47,7 @@
 }
 
 /* Styles for AddButton */
-.btn-container{
+.btn-container-inactive, .btn-container-active{
     display:flex;
     justify-content: center;
     align-items: center;
@@ -55,87 +56,154 @@
     position: fixed;
     bottom:0;
     right:0;
+    border: 2px solid #c4c4c4;
+    border-radius: 20px;
+    padding: 10px;
+    transition: 0.3s;
 }    
-#addbtn {
-    border-radius: 100%;
-    width:7rem;
-    height:7rem ;
-    font-size: 5em;
-    transition: 0.2s;
-    background-color: rgb(216, 216, 216);
+.btn-container-active:hover, .btn-container-inactive:hover {
+  scale:1.2;
+  border: 2px solid #ebebeb;
 }
-#addbtn:hover {
-    width: 8rem;
-    height: 8rem;
-    background-color: white;
+.btn-container-active:active, .btn-container-inactive:active {
+  scale:0.9;
+  border: 2px solid #ffffff;
+}
+.btn-container-active{
+  transform: rotate(45deg);
+}
+.plus {
+  --b: 8px;   /* the thickness*/
+  --c: #0000 90deg,#c4c4c4 0; /* the coloration */
+  width: 20px; /* the size */
+  aspect-ratio: 1;
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),var(--c)) 
+    calc(100% + var(--b)/2) calc(100% + var(--b)/2)/
+    calc(50%  + var(--b))   calc(50%  + var(--b));
+  padding: 10px;
+}
+.plus:hover{
+  --c: #0000 90deg,#ffffff 0;
 }
 
-#addbtn:active {
-    width: 6rem;
-    height: 6rem;
-    background-color: rgb(154, 154, 154);
+/* Styles for AddForm */
+:root{
+  --primary: #f7f7f7;
+  --secondary: #000000;
+  --accent: #a1a1a1;
+  --shadow: 8px 8px 0px var(--primary);
+}
+.login-active, .login-inactive {
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid var(--primary);
+  padding: 40px 30px;
+  background-color: var(--secondary);
+  box-shadow: var(--shadow);
+  position: absolute;
+  border-radius: 12px;
+  overflow:hidden;
+  transition: 0.5s;
+  margin-left: 76rem;
+}
+.login-inactive{
+  margin-top:60rem;
+}
+.login-active{
+  margin-top: 22rem;
+}
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: -6px;
+  bottom: -6px;
+  border: 1px solid var(--primary);
+  z-index: -1;
+  border-radius: 12px;
+}
+.add-title {
+  color: var(--primary);
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+}
+.input-group {
+  margin-bottom: 20px;
+  max-width: 364px;
+  position: relative;
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--primary);
+}
+input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid var(--primary);
+  background-color: var(--secondary);
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s;
+}
+input:focus {
+  box-shadow: 4px 4px 0px var(--primary);
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--accent);
+  color: #000000;
+  border: 2px solid var(--primary);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s;
+}
+button:hover {
+  box-shadow: 4px 4px 0px var(--primary);
+  transform: translate(-2px, -2px);
 }
 
 /* Styles for Arrows */
-/* From Uiverse.io by Nawsome */ 
-.arrow1 {
-  cursor: pointer;
-  height: 60px;
-  left: 90%;
+.arrow-right,
+.arrow-left {
+  display: block;
+  width: 25px;
+  height: 25px;
+  border-top: 2px solid #c4c4c4;
+  border-left: 2px solid #c4c4c4;
   position: absolute;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  transition: transform 0.1s;
-  width: 50px;
+  transition: 0.3s;
 }
-.arrow2 {
-  cursor: pointer;
-  height: 60px;
-  left: 10%;
-  position: absolute;
-  top: 47%;
-  transform: translateX(-50%) translateY(-50%);
-  transition: transform 0.1s;
-  width: 50px;
-  transform: scale(-1,1);
+.arrow-right {
+  transform: rotate(135deg) scale(2);
+  margin-left: 85%;
+  margin-top: 23.6%;
 }
-
-.arrow-top, .arrow-bottom {
-  background-color: #aaaaaa;
-  height: 4px;
-  left: -5px;
-  position: absolute;
-  top: 50%;
-  width: 100%;
+.arrow-right:hover {
+  scale: 1.2;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
 }
-
-.arrow-top:after, .arrow-bottom:after {
-  background-color: #fff;
-  content: "";
-  height: 100%;
-  position: absolute;
-  top: 0;
-  transition: all 0.15s;
+.arrow-left{
+  transform: rotate(-45deg) scale(2);
+  margin-left: 13%;
+  margin-top: 23.6%;
+  
+}
+.arrow-left:hover{
+  scale: 1.2;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+}
+.arrow-left:active, .arrow-right:active {
+  scale: 0.9;
 }
 
-.arrow-top {
-  transform: rotate(45deg);
-  transform-origin: bottom right;
-}
-
-.arrow-top:after {
-  left: 100%;
-  right: 0;
-  transition-delay: 0s;
-}
-
-.arrow-bottom {
-  transform: rotate(-45deg);
-  transform-origin: top right;
-}
-
-.arrow-bottom:after {
-  left: 0;
-  right: 100%;
-  transition-delay: 0.15s;
-}

@@ -152,7 +152,7 @@ function App() {
         scene={{ background: new THREE.Color("black") }}
         camera={{ position: [0, 0, 2] }}
       >
-
+        <axesHelper args={[5,5]} />
         <PlaneShader />
         <IcoLines />
 

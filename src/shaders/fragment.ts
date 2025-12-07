@@ -39,7 +39,7 @@ const fShader = /* glsl */`
         
         float diffuse = dot(normal, vec3(0.9));
         
-        vec2 rand = hash22(vec2(floor(diffuse*10.)));
+        vec2 rand = hash22(vec2(floor(diffuse*8.)));
         vec2 strength=vec2(
             sign((rand.x-.5))+(rand.x-.5)*5.,
             sign((rand.y-.5))+(rand.y-.5)*5.);
