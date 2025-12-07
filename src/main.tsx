@@ -12,7 +12,6 @@ createRoot(document.getElementById('root')!).render(
       <MemoryName />
       
     </div>
-    <Arrows />
     <AddButton />
     <App />
   </StrictMode>,

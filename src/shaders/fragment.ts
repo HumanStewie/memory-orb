@@ -29,7 +29,6 @@ const fShader = /* glsl */`
 
     void main() {
         vec2 uv = gl_FragCoord.xy/vec2(1000.);
-        
         // Computing Normals - Effectively creates flat shading
         vec3 X = dFdx(vNormal);
         vec3 Y = dFdy(vNormal);
@@ -49,13 +48,13 @@ const fShader = /* glsl */`
 
         vec3 camPos = normalize(vPosition - cameraPosition); // Vector of camera normalized
         
-        float F = fresnel(0.3, 1.3, 1.5, camPos, normal);
+        float F = fresnel(0.3, 1.3, 2.5, camPos, normal);
         vec3 refraction = refract(eyeVector, normal, 1.0/3.0);
         
         newUv += refraction.xy;
-
+        
         vec4 t = texture2D(uTexture, newUv);
-        vec3 color = vec3(t.xyz);
+        vec3 color = vec3((1.0-F)*t.xyz);
 
         //gl_FragColor = t;
         gl_FragColor = vec4(color, 1.0);

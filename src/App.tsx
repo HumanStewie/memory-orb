@@ -5,8 +5,10 @@ import vShader from "./shaders/vertex";
 import fShader from "./shaders/fragment";
 import lfShader from "./shaders/fragmentLine";
 import lvShader from "./shaders/vertexLine";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
+  MeshReflectorMaterial,
+  MeshRefractionMaterial,
   OrbitControls,
   PerspectiveCamera,
   useFBO,
@@ -14,7 +16,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { float, vec2 } from "three/tsl";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { plane } from "three/examples/jsm/Addons.js";
 import {
   Bloom,
@@ -22,9 +24,24 @@ import {
   EffectComposer,
   Noise,
 } from "@react-three/postprocessing";
+import gsap from "gsap";
 
-function Post(){
-  return 
+function Arrows() {
+  const [tChange, setTChange] = useState(false)
+  
+
+  return (
+    <>
+      <div className="arrow1" >
+        <div className="arrow-top"></div>
+        <div className="arrow-bottom"></div>
+      </div>
+      <div className="arrow2">
+        <div className="arrow-top"></div>
+        <div className="arrow-bottom"></div>
+      </div>
+    </>
+  );
 }
 
 function IcoLines(){
@@ -48,9 +65,14 @@ function IcoLines(){
 }
 
 function PlaneShader() {
-  const mesh1 = useRef<THREE.Mesh>(null);
+  const mesh = useRef<THREE.Mesh>(null);
+  const { camera } = useThree();
+  const tl = gsap.timeline({});
+
   let t = new THREE.TextureLoader().load("/hypothetically-couldnt-rae-shrink-down-and-get-inside-my-v0-zqnsul89e9vf1.webp");
   t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
+  let t2 = new THREE.TextureLoader().load("/w.jpg");
+  t2.wrapS = t2.wrapT = THREE.MirroredRepeatWrapping;
 
   const uniform = {
     uTime: { type: "f", value: 0.0 },
@@ -62,23 +84,43 @@ function PlaneShader() {
       value: t,
     },
   };
-  
   useFrame((state, delta) => {
     uniform.uTime.value += delta;
-    if (mesh1.current) {
-      mesh1.current.rotation.x += delta / 10;
-      mesh1.current.rotation.y += delta / 10;
+    if (mesh.current) {
+      mesh.current.rotation.x += delta / 10;
+      mesh.current.rotation.y += delta / 10;
+      
     }
   });
   window.addEventListener("mousemove", (e) => {
     uniform.uMouse.value.x = (e.pageX / window.innerWidth - 0.5) * 2.0;
     uniform.uMouse.value.y = (e.pageY / window.innerHeight - 0.5) * 2.0;
   });
+  
+  window.addEventListener('dblclick', () => {
+    gsap.to(camera.rotation, {
+      x: 0,
+      y: camera.rotation.y-Math.PI*2,
+      z: 0,
+      duration: 2,
+      ease: "power4.out",
+    });
+    setTimeout(() => {uniform.uTexture.value = t2}, 100)
+  })
+  window.addEventListener('dblclick', () => {
+    gsap.to(camera.rotation, {
+      x: 0,
+      y: camera.rotation.y + Math.PI*2,
+      z: 0,
+      duration: 2,
+      ease: "power4.out",
+    });
+    setTimeout(() => {uniform.uTexture.value = t  }, 100)
 
-
+  })
   return (
     <>
-      <mesh rotation={[0, 0, 0]} ref={mesh1} visible={true}>
+      <mesh rotation={[0, 0, 0]} ref={mesh} visible={true} >
         <icosahedronGeometry args={[1, 1]} />
         <shaderMaterial
           vertexShader={vShader}
@@ -100,19 +142,22 @@ function setupAttributes( geometry ) {
   let aBary = new Float32Array(bary);
   geometry.setAttribute('aBary', new THREE.BufferAttribute(aBary, 3))
 }
+
+
 function App() {
+
   return (
-    <div id="canvas-container">
+    <><Arrows /><div id="canvas-container">
       <Canvas
         scene={{ background: new THREE.Color("black") }}
-        camera={{ position: [1.5, 0, 1.5] }}
+        camera={{ position: [0, 0, 2] }}
       >
-        
-        <OrbitControls />
-        <IcoLines />
+
         <PlaneShader />
+        <IcoLines />
+
       </Canvas>
-    </div>
+    </div></>
   );
 }
 
