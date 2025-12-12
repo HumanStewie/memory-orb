@@ -6,7 +6,7 @@
     top:0;
     left:0;
 }
-html, body {margin: 0; height: 100%; overflow: hidden}
+body { background-color: black;}
 #wcontainer {
     position:absolute;
     overflow: hidden;
@@ -105,10 +105,12 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   border-radius: 12px;
   overflow:hidden;
   transition: 0.5s;
-  margin-left: 76rem;
+  margin-left: 60%;
 }
 .login-inactive{
   margin-top:60rem;
+  visibility:hidden;
+
 }
 .login-active{
   margin-top: 22rem;
@@ -185,25 +187,45 @@ button:hover {
 .arrow-right {
   transform: rotate(135deg) scale(2);
   margin-left: 85%;
-  margin-top: 23.6%;
+  margin-top: 450px;
 }
 .arrow-right:hover {
   scale: 1.2;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
+  border-color: #ffffff;
+
 }
 .arrow-left{
   transform: rotate(-45deg) scale(2);
   margin-left: 13%;
-  margin-top: 23.6%;
-  
+  margin-top: 450px;
+    
 }
 .arrow-left:hover{
   scale: 1.2;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
+  border-color: #ffffff;
+
 }
 .arrow-left:active, .arrow-right:active {
   scale: 0.9;
 }
 
+/* Styles for MemoryInfo */
+.modal {
+  position:absolute;
+  font-family: "Archivo Black", sans-serif;
+  color: white;
+  text-align: right;
+  margin-left: 800px;
+  margin-right: 100px;
+  margin-top: 10px;
+}
+.modal h1{
+  font-size: 90px;
+  color: rgb(255, 255, 255);
+  margin-bottom: -15px;
+}
+.modal h3{
+  color: rgb(216, 216, 216);
+  font-size: 40px;
+  margin-bottom: -10px;
+}

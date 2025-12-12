@@ -3,6 +3,7 @@ const fShader = /* glsl */`
     uniform vec2 uMouse;
     uniform sampler2D uTexture;
     uniform vec2 uResolution;
+    uniform float uColor;
     varying vec3 vPosition;
     varying vec3 vNormal;
     varying vec2 vUv;
@@ -13,18 +14,10 @@ const fShader = /* glsl */`
     }
 
     // Hash functions - https://github.com/Angelo1211/2020-Weekly-Shader-Challenge/blob/master/hashes.glsl
-    uvec2 murmurHash22(uvec2 src) {
-        const uint M = 0x5bd1e995u;
-        uvec2 h = uvec2(1190494759u, 2147483647u);
-        src *= M; src ^= src>>24u; src *= M;
-        h *= M; h ^= src.x; h *= M; h ^= src.y;
-        h ^= h>>13u; h *= M; h ^= h>>15u;
-        return h;
-    }
-
-    vec2 hash22(vec2 src) {
-        uvec2 h = murmurHash22(floatBitsToUint(src));
-        return uintBitsToFloat(h & 0x007fffffu | 0x3f800000u) - 1.0;
+    vec2 hash22(vec2 p){
+    p=fract(p*vec2(5.3983,5.4427));
+    p+=dot(p.yx,p.xy+vec2(21.5351,14.3137));
+    return fract(vec2(p.x*p.y*95.4337,p.x*p.y*97.597));
     }
 
     void main() {
@@ -34,30 +27,35 @@ const fShader = /* glsl */`
         vec3 Y = dFdy(vNormal);
         vec3 normal = normalize(cross(X, Y));
 
-        //vec3 noise = vec3(snoise(vNormal * 1.0));
-        //vec3 wave = vec3(fract(noise.y + uTime/1.5));
+        float redOffset   =  0.009;
+        float greenOffset =  0.006;
+        float blueOffset  = -0.006;
+        
         
         float diffuse = dot(normal, vec3(0.9));
         
-        vec2 rand = hash22(vec2(floor(diffuse*8.)));
+        vec2 rand = hash22(vec2(floor(diffuse*10.)));
         vec2 strength=vec2(
-            sign((rand.x-.5))+(rand.x-.5)*5.,
-            sign((rand.y-.5))+(rand.y-.5)*5.);
+            sign((rand.x-.5))+(rand.x-.5)*.6,
+            sign((rand.y-.5))+(rand.y-.5)*.6);
 
         vec2 newUv = strength*gl_FragCoord.xy/vec2(1000.0);
 
         vec3 camPos = normalize(vPosition - cameraPosition); // Vector of camera normalized
         
-        float F = fresnel(0.3, 1.3, 2.5, camPos, normal);
+        float F = fresnel(0.1, 1.5, 2., camPos, normal);
         vec3 refraction = refract(eyeVector, normal, 1.0/3.0);
-        
-        newUv += refraction.xy;
-        
-        vec4 t = texture2D(uTexture, newUv);
-        vec3 color = vec3((1.0-F)*t.xyz);
 
+        newUv += refraction.xy;
+            
+        vec4 t = texture2D(uTexture, newUv);
+        
+        float grey = 0.21 * t.r + 0.71 * t.g + 0.07 * t.b;
+        vec3 color = vec3((1.0-F)*(t.rgb * (1.0 - uColor) + (grey * uColor))/1.2);
+        
         //gl_FragColor = t;
         gl_FragColor = vec4(color, 1.0);
+        //gl_FragColor = vec4(t.rgb, 1.0);
     }
 `;
 export default fShader;
