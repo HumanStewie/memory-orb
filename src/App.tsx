@@ -40,21 +40,19 @@ import {
   RenderPass,
 } from "postprocessing";
 
-
 function PostProcess() {
-  const {scene, camera} = useThree();
-  const composer = new EffectComposer(new   THREE.WebGLRenderer())
-  const renderPass = new RenderPass(scene, camera)
-   
+  const { scene, camera } = useThree();
+  const composer = new EffectComposer();
+  const renderPass = new RenderPass(scene, camera);
 }
 
 function IcoLines() {
   const mesh = useRef<THREE.Mesh>(null);
-  
+
   const uniform = {
     uTime: { type: "f", value: 0.0 },
     uSpeed: { value: 0.0 },
-    uColor: {value: 1.3}
+    uColor: { value: 1.3 },
   };
   useFrame((state, delta) => {
     uniform.uTime.value += delta;
@@ -71,13 +69,12 @@ function IcoLines() {
       rotation={[0, 0, 0]}
       ref={mesh}
       onPointerOver={() => {
-        gsap.to(uniform.uSpeed, {value: 1.0, duration: 0.5});
-        gsap.to(uniform.uColor, {value: 1.0, duration: 0.5})
+        gsap.to(uniform.uSpeed, { value: 1.0, duration: 0.5 });
+        gsap.to(uniform.uColor, { value: 1.0, duration: 0.5 });
       }}
       onPointerLeave={() => {
-        gsap.to(uniform.uSpeed, {value: 0.0, duration: 0.5});
-        gsap.to(uniform.uColor, {value: 1.3, duration: 0.5})
-
+        gsap.to(uniform.uSpeed, { value: 0.0, duration: 0.5 });
+        gsap.to(uniform.uColor, { value: 1.3, duration: 0.5 });
       }}
     >
       <icosahedronGeometry isBufferGeometry={true} args={[1.001, 1]} />
@@ -143,6 +140,22 @@ function PlaneShader() {
       }, 100);
     }
   });
+  window.addEventListener("keydown", (e) => {
+    if (!tl.isActive()) {
+      if (e.key == "ArrowRight") {
+        tl.to(camera.rotation, {
+          x: 0,
+          y: camera.rotation.y - Math.PI * 2,
+          z: 0,
+          duration: 2,
+          ease: "power4.out",
+        });
+        setTimeout(() => {
+          uniform.uTexture.value = t2;
+        }, 100);
+      }
+    }
+  });
   leftButton[0].addEventListener("click", () => {
     if (!tl.isActive()) {
       tl.to(camera.rotation, {
@@ -157,6 +170,22 @@ function PlaneShader() {
       }, 100);
     }
   });
+  window.addEventListener("keydown", (e) => {
+    if (!tl.isActive()) {
+      if (e.key == "ArrowLeft") {
+        tl.to(camera.rotation, {
+          x: 0,
+          y: camera.rotation.y + Math.PI * 2,
+          z: 0,
+          duration: 2,
+          ease: "power4.out",
+        });
+        setTimeout(() => {
+          uniform.uTexture.value = t;
+        }, 100);
+      }
+    }
+  });
 
   return (
     <>
@@ -165,13 +194,12 @@ function PlaneShader() {
         ref={mesh}
         visible={true}
         onPointerOver={() => {
-          gsap.to(uniform.uColor, {value: 0.0, duration: 0.5});
-          gsap.to(uniform.uSpeed, {value: 1.0, duration: 0.5});
+          gsap.to(uniform.uColor, { value: 0.0, duration: 0.5 });
+          gsap.to(uniform.uSpeed, { value: 1.0, duration: 0.5 });
         }}
         onPointerLeave={() => {
-          gsap.to(uniform.uColor, {value: 1.0, duration: 0.5});
-          gsap.to(uniform.uSpeed, {value: 0.0, duration: 0.5});
-
+          gsap.to(uniform.uColor, { value: 1.0, duration: 0.5 });
+          gsap.to(uniform.uSpeed, { value: 0.0, duration: 0.5 });
         }}
       >
         <icosahedronGeometry args={[1, 1]} />
@@ -206,7 +234,8 @@ function App() {
         >
           <PlaneShader />
           <IcoLines />
-          <EffectComposer></EffectComposer>
+          <EffectComposer>
+          </EffectComposer>
         </Canvas>
       </div>
     </>
