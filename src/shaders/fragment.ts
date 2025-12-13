@@ -39,7 +39,7 @@ const fShader = /* glsl */`
             sign((rand.x-.5))+(rand.x-.5)*.6,
             sign((rand.y-.5))+(rand.y-.5)*.6);
 
-        vec2 newUv = strength*gl_FragCoord.xy/vec2(1000.0);
+        vec2 newUv = strength*gl_FragCoord.xy/vec2(600.);
 
         vec3 camPos = normalize(vPosition - cameraPosition); // Vector of camera normalized
         
@@ -49,11 +49,10 @@ const fShader = /* glsl */`
         newUv += refraction.xy;
             
         vec4 t = texture2D(uTexture, newUv);
-        
         float grey = 0.21 * t.r + 0.71 * t.g + 0.07 * t.b;
-        vec3 color = vec3((1.0-F)*(t.rgb * (1.0 - uColor) + (grey * uColor))/1.2);
+        vec3 color = vec3((1.0-F)*(t.rgb * (1.0 - uColor) + (grey * uColor)));
         
-        //gl_FragColor = t;
+        //gl_FragColor = t; 
         gl_FragColor = vec4(color, 1.0);
         //gl_FragColor = vec4(t.rgb, 1.0);
     }

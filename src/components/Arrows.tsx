@@ -2,10 +2,10 @@ interface Props {
   onClickRight: () => void;
 }
 
-export default function Arrows({onClickRight} : Props) {
+export default function Arrows() {
   return (
     <>
-      <div className="arrow-right" onClick={onClickRight}></div>
+      <div className="arrow-right"></div>
       <div className="arrow-left"></div>
     </>
   );

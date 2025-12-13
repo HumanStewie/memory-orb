@@ -4,7 +4,7 @@ const lfShader = /* glsl */ `
     varying vec3 vBary;
 
 	void main() { 
-        float width = 4.0;
+        float width = 2.0;
         vec3 f = fwidth(vBary);
         vec3 s = smoothstep(f*(width + 0.5), f*(width - 0.5), vBary);
         float line = max(s.y, max(s.x, s.z));

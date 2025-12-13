@@ -17,8 +17,8 @@ import {
   Wireframe,
 } from "@react-three/drei";
 import * as THREE from "three";
-import { float, vec2 } from "three/tsl";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { float, mat2, vec2 } from "three/tsl";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { plane } from "three/examples/jsm/Addons.js";
 import {
   Bloom,
@@ -41,54 +41,60 @@ import {
 } from "postprocessing";
 
 function PostProcess() {
-  const { scene, camera } = useThree();
-  const composer = new EffectComposer();
-  const renderPass = new RenderPass(scene, camera);
+  return (
+    <>
+      <EffectComposer enableNormalPass={false}>
+        <ChromaticAberration offset={[0.001, 0.0002]} />
+        <Noise opacity={0.1} /> 
+        <Bloom intensity={0.5} luminanceThreshold={0.6} luminanceSmoothing={0.2} blendFunction={BlendFunction.SCREEN}/>
+      </EffectComposer>
+    </>
+  )
+
 }
 
 function IcoLines() {
-  const mesh = useRef<THREE.Mesh>(null);
+  const mesh2 = useRef<THREE.Mesh>(null);
 
-  const uniform = {
+  const uniform2 = {
     uTime: { type: "f", value: 0.0 },
     uSpeed: { value: 0.0 },
     uColor: { value: 1.3 },
   };
   useFrame((state, delta) => {
-    uniform.uTime.value += delta;
-    if (mesh.current) {
-      mesh.current.rotation.x += delta / 10;
-      mesh.current.rotation.y += delta / 10;
+    uniform2.uTime.value += delta;
+    if (mesh2.current) {
+      mesh2.current.rotation.x += delta / 10;
+      mesh2.current.rotation.y += delta / 10;
     }
   });
   useEffect(() => {
-    setupAttributes(mesh.current?.geometry);
+    setupAttributes(mesh2.current?.geometry);
   });
   return (
     <mesh
       rotation={[0, 0, 0]}
-      ref={mesh}
-      onPointerOver={() => {
-        gsap.to(uniform.uSpeed, { value: 1.0, duration: 0.5 });
-        gsap.to(uniform.uColor, { value: 1.0, duration: 0.5 });
-      }}
-      onPointerLeave={() => {
-        gsap.to(uniform.uSpeed, { value: 0.0, duration: 0.5 });
-        gsap.to(uniform.uColor, { value: 1.3, duration: 0.5 });
-      }}
+      ref={mesh2}
     >
-      <icosahedronGeometry isBufferGeometry={true} args={[1.001, 1]} />
+      <icosahedronGeometry isBufferGeometry={true} args={[1.1, 1]} />
       <shaderMaterial
         vertexShader={lvShader}
         fragmentShader={lfShader}
-        uniforms={uniform}
+        uniforms={uniform2}
       />
     </mesh>
   );
 }
 
-function PlaneShader() {
-  const mesh = useRef<THREE.Mesh>(null);
+interface IcoProps{
+  onClick: () => void
+}
+
+function PlaneShader({onClick}: IcoProps) {
+  const mesh1 = useRef<THREE.Mesh>(null);
+  const mesh2 = useRef<THREE.Mesh>(null);
+  const mat1Ref = useRef<THREE.ShaderMaterial>(null);
+  const mat2Ref = useRef<THREE.ShaderMaterial>(null);
   const { camera } = useThree();
   const tl = gsap.timeline();
   const rightButton = document.body.getElementsByClassName("arrow-right");
@@ -100,9 +106,8 @@ function PlaneShader() {
   let t2 = new THREE.TextureLoader().load("/w.jpg");
   t2.wrapS = t2.wrapT = THREE.MirroredRepeatWrapping;
 
-  let colorG = 1.0;
-  let speedM = 0.0;
-  const uniform = {
+  
+  const uniform1 = useMemo(()=>({
     uTime: { type: "f", value: 0.0 },
     uMouse: { value: new THREE.Vector2() },
     uResolution: {
@@ -111,38 +116,35 @@ function PlaneShader() {
     uTexture: {
       value: t,
     },
-    uColor: { value: colorG },
-    uSpeed: { value: speedM },
-  };
+    uColor: { value: 1.0 },
+    uSpeed: { value: 0.0 },
+  }), []);
+  const uniform2 = useMemo(()=>({
+    uTime: { type: "f", value: 0.0 },
+    uSpeed: { value: 0.0 },
+    uColor: { value: 1.3 },
+  }), []);
   useFrame((state, delta) => {
-    uniform.uTime.value += delta;
-    if (mesh.current) {
-      mesh.current.rotation.x += delta / 10;
-      mesh.current.rotation.y += delta / 10;
+    if (mat1Ref.current) {
+      mat1Ref.current.uniforms.uTime.value += delta;
+    }
+    if (mat2Ref.current) {
+      mat2Ref.current.uniforms.uTime.value += delta;
+    }
+    if (mesh1.current) {
+      mesh1.current.rotation.x += delta / 10;
+      mesh1.current.rotation.y += delta / 10;
+    }
+    if (mesh2.current) {
+      mesh2.current.rotation.x += delta / 10;
+      mesh2.current.rotation.y += delta / 10;
     }
   });
-  window.addEventListener("mousemove", (e) => {
-    uniform.uMouse.value.x = (e.pageX / window.innerWidth - 0.5) * 2.0;
-    uniform.uMouse.value.y = (e.pageY / window.innerHeight - 0.5) * 2.0;
-  });
-
-  rightButton[0].addEventListener("click", () => {
-    if (!tl.isActive()) {
-      tl.to(camera.rotation, {
-        x: 0,
-        y: camera.rotation.y - Math.PI * 2,
-        z: 0,
-        duration: 2,
-        ease: "power4.out",
-      });
-      setTimeout(() => {
-        uniform.uTexture.value = t2;
-      }, 100);
-    }
-  });
-  window.addEventListener("keydown", (e) => {
-    if (!tl.isActive()) {
-      if (e.key == "ArrowRight") {
+  useEffect(() => {
+    setupAttributes(mesh2.current?.geometry);
+    // Get input
+    rightButton[0].addEventListener("click", () => {
+      if (!tl.isActive()) {
         tl.to(camera.rotation, {
           x: 0,
           y: camera.rotation.y - Math.PI * 2,
@@ -151,28 +153,28 @@ function PlaneShader() {
           ease: "power4.out",
         });
         setTimeout(() => {
-          uniform.uTexture.value = t2;
+          uniform1.uTexture.value = t2;
         }, 100);
       }
-    }
-  });
-  leftButton[0].addEventListener("click", () => {
-    if (!tl.isActive()) {
-      tl.to(camera.rotation, {
-        x: 0,
-        y: camera.rotation.y + Math.PI * 2,
-        z: 0,
-        duration: 2,
-        ease: "power4.out",
-      });
-      setTimeout(() => {
-        uniform.uTexture.value = t;
-      }, 100);
-    }
-  });
-  window.addEventListener("keydown", (e) => {
-    if (!tl.isActive()) {
-      if (e.key == "ArrowLeft") {
+    });
+    window.addEventListener("keydown", (e) => {
+      if (!tl.isActive()) {
+        if (e.key == "ArrowRight") {
+          tl.to(camera.rotation, {
+            x: 0,
+            y: camera.rotation.y - Math.PI * 2,
+            z: 0,
+            duration: 2,
+            ease: "power4.out",
+          });
+          setTimeout(() => {
+            uniform1.uTexture.value = t2;
+          }, 100);
+        }
+      }
+    });
+    leftButton[0].addEventListener("click", () => {
+      if (!tl.isActive()) {
         tl.to(camera.rotation, {
           x: 0,
           y: camera.rotation.y + Math.PI * 2,
@@ -181,32 +183,77 @@ function PlaneShader() {
           ease: "power4.out",
         });
         setTimeout(() => {
-          uniform.uTexture.value = t;
+          uniform1.uTexture.value = t;
         }, 100);
       }
-    }
-  });
+    });
+    window.addEventListener("keydown", (e) => {
+      if (!tl.isActive()) {
+        if (e.key == "ArrowLeft") {
+          tl.to(camera.rotation, {
+            x: 0,
+            y: camera.rotation.y + Math.PI * 2,
+            z: 0,
+            duration: 2,
+            ease: "power4.out",
+          });
+          setTimeout(() => {
+            uniform1.uTexture.value = t;
+          }, 100);
+        }
+      }
+    });
+  }); 
+
 
   return (
     <>
       <mesh
         rotation={[0, 0, 0]}
-        ref={mesh}
-        visible={true}
+        ref={mesh1}
         onPointerOver={() => {
-          gsap.to(uniform.uColor, { value: 0.0, duration: 0.5 });
-          gsap.to(uniform.uSpeed, { value: 1.0, duration: 0.5 });
+          if (mat1Ref.current) {
+            gsap.to(mat1Ref.current.uniforms.uColor, { value: 0.0, duration: 0.5 });
+            gsap.to(mat1Ref.current.uniforms.uSpeed, { value: 1.0, duration: 0.5 });
+          }
+          if (mat2Ref.current){
+            gsap.to(mat2Ref.current.uniforms.uColor, { value: 1.0, duration: 0.5 });
+            gsap.to(mat2Ref.current.uniforms.uSpeed, { value: 1.0, duration: 0.5 });
+          }
+          console.log("gobv")
         }}
         onPointerLeave={() => {
-          gsap.to(uniform.uColor, { value: 1.0, duration: 0.5 });
-          gsap.to(uniform.uSpeed, { value: 0.0, duration: 0.5 });
+          if (mat1Ref.current) {
+            gsap.to(mat1Ref.current.uniforms.uColor, { value: 1.0, duration: 0.5 });
+            gsap.to(mat1Ref.current.uniforms.uSpeed, { value: 0.0, duration: 0.5 });
+          }
+          if (mat2Ref.current){
+            gsap.to(mat2Ref.current.uniforms.uColor, { value: 1.3, duration: 0.5 });
+            gsap.to(mat2Ref.current.uniforms.uSpeed, { value: 0.0, duration: 0.5 });
+          }
         }}
+        onClick={onClick}
       >
         <icosahedronGeometry args={[1, 1]} />
         <shaderMaterial
+          ref={mat1Ref}
           vertexShader={vShader}
           fragmentShader={fShader}
-          uniforms={uniform}
+          uniforms={uniform1}
+          toneMapped={false}
+        />
+      </mesh>
+      <mesh
+        rotation={[0, 0, 0]}
+        ref={mesh2}
+      >
+        <icosahedronGeometry isBufferGeometry={true} args={[1.1, 1]} />
+        <shaderMaterial
+          ref={mat2Ref}
+          vertexShader={lvShader}
+          fragmentShader={lfShader}
+          uniforms={uniform2}
+          toneMapped={false}
         />
       </mesh>
     </>
@@ -225,19 +272,19 @@ function setupAttributes(geometry) {
 }
 
 function App() {
+  const [active, setActive] = useState("inactive")
   return (
     <>
       <div id="canvas-container">
         <Canvas
-          scene={{ background: new THREE.Color("black") }}
+          scene={{ background: new THREE.Color("#1c1c1c") }}
           camera={{ position: [0, 0, 2] }}
         >
-          <PlaneShader />
-          <IcoLines />
-          <EffectComposer>
-          </EffectComposer>
+          <PlaneShader onClick={() => {setActive('active')}}/>
+          <PostProcess />
         </Canvas>
       </div>
+      <MemoryInfo state={active}/>
     </>
   );
 }

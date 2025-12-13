@@ -1,7 +1,15 @@
-export default function MemoryInfo() {
+import { useState } from "react";
+
+interface Props {
+  state: string
+}
+
+export default function MemoryInfo({state}: Props) {
+  const [x, setX] = useState(true)
   return (
     <>
-      <div className="modal" >
+      <div className={`modal-${x ? state : "inactive"}`} >
+        <div className="x" onClick={() => setX(false)}>X</div>
         <h1>Memory Title</h1>
         <h3 id="modal-date">10/10/2007</h3>
         <h3>Description</h3>
@@ -13,6 +21,7 @@ export default function MemoryInfo() {
         </p>
         <image></image>
       </div>
+      <div className={`overlayb-${x ? state : "inactive"}`}></div>
     </>
   );
 }

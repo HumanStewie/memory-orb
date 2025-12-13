@@ -88,7 +88,7 @@ const vShader = /* glsl */ `
         vNormal = normalize(normalMatrix * normal);
         vec4 worldPos = modelMatrix * vec4(position, 1.0);
         eyeVector = normalize(worldPos.xyz - cameraPosition);
-        vec3 newNormal = normal+ cnoise(normal*uTime)*uSpeed/15.0;
+        vec3 newNormal = normal + cnoise(normal*uTime)*uSpeed/15.0;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(newNormal, 1.0);
     }
 `;
