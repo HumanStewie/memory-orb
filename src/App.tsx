@@ -280,8 +280,13 @@ function App() {
           scene={{ background: new THREE.Color("#1c1c1c") }}
           camera={{ position: [0, 0, 2] }}
         >
+          <Html>
+            <div className="arrow-right"></div>
+            <div className="arrow-left"></div>
+          </Html>
           <PlaneShader onClick={() => {setActive('active')}}/>
           <PostProcess />
+
         </Canvas>
       </div>
       <MemoryInfo state={active}/>
