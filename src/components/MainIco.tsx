@@ -42,7 +42,7 @@ export default function MainIco({ onClick }: IcoProps) {
       uColor: { value: 1.0 },
       uSpeed: { value: 0.0 },
     }),
-    [t]
+    []
   );
   const uniform2 = useMemo(
     () => ({
@@ -178,9 +178,7 @@ export default function MainIco({ onClick }: IcoProps) {
           }}
         ></div>
         <MemoryName />
-        
       </Html>
-
       <mesh
         rotation={[0, 0, 0]}
         ref={mesh1}

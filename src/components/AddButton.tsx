@@ -1,16 +1,24 @@
 import gsap from "gsap";
 import { useState } from "react";
 
-function AddForm() {
+interface FormProps {
+  onClick?: () => void;
+}
+
+function AddForm({ onClick }: FormProps) {
   const [active, setActive] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     setActive(true);
   };
   return (
-    <div className={`form-container ${active ? "form-container-done" : ""}`}>
+    <div
+      className={`form-container ${
+        active ? "form-container-done" : "form-container-start"
+      }`}
+    >
       <form
-        className={`memory-form ${active ? "memory-done" : ""}`}
+        className={`memory-form ${active ? "memory-done" : "memory-start"}`}
         onSubmit={handleSubmit}
       >
         <h2 className="add-title">Add a Memory</h2>
@@ -31,14 +39,13 @@ function AddForm() {
           <label htmlFor="memoryImage">Memory Image</label>
           <input type="file" id="memoryImage" name="memoryImage"></input>
         </div>
-        <button type="submit" className="btn-form">
+        <button type="submit" className="btn-form" onClick={onClick}>
           Add Memory
         </button>
       </form>
     </div>
   );
 }
-
 export default function AddButton() {
   const [state, setState] = useState("inactive");
   return (
@@ -51,7 +58,8 @@ export default function AddButton() {
       >
         <div className="plus"></div>
       </div>
-      <AddForm />
+            {state === "inactive" ? "" : <AddForm onClick={() => setState('inactive')}/>}
+
     </>
   );
 }

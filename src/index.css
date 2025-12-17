@@ -132,9 +132,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 2; 
-}
-.memory-form {
-
+    animation-name: fade-in;
+    animation-duration: 0.3s;
 }
 .memory-form {
     background-color: #1a1a1a; 
@@ -142,6 +141,15 @@ body {
     padding: 2rem 3rem;
     width: 320px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    animation: fade-in 0.3s ease, drop-in 0.3s ease;
+}
+@keyframes fade-in{
+  from{opacity: 0;}
+  to{opacity: 100;}
+}
+@keyframes drop-in {
+  from{transform: translateY(-70vh);}
+  to{transform:translateY(0vh)}
 }
 .memory-form h2 {
     font-size: 1.2rem;
@@ -205,6 +213,7 @@ body {
   opacity: 0;
   pointer-events: none;
 }
+
 
 /* Add styles for Login*/
 .login-overlay {
