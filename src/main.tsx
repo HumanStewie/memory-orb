@@ -8,11 +8,6 @@ import Arrows from './components/Arrows.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <div id='wcontainer'>
-      <MemoryName />
-      
-    </div>
-    <Arrows />
     <AddButton />
     <App />
   </StrictMode>,

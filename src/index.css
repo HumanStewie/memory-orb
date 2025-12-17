@@ -1,199 +1,296 @@
 #canvas-container {
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    z-index: -1;
-    top:0;
-    left:0;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
 }
-body { background-color: black;margin: 0; height: 100%; overflow: hidden}
-#wcontainer {
-    position:absolute;
-    overflow: hidden;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-	  pointer-events: none;
+html, body {margin: 0; height: 100%; overflow: hidden}
+body {
+    background-color: #121212; /* Dark black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Roboto Mono', monospace; /* Monospaced for modernist feel */
+    color: #ffffff;
 }
 
 /* Styles for MemoryName */
-.memory-title{
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 6em;
-    margin-top: 2.5em;
-    -moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-    user-select: none;
-	pointer-events: none;
-  position:fixed;
+.memory-title {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  position: fixed;
+  margin-top: -45vh;
+  margin-right: -50vw;
+  left: -40vw;
 }
+
 #main-name {
-    color:rgb(216, 216, 216);
-    font-family: "Archivo Black", sans-serif;
-    font-weight: bolder;
-    font-style: normal;
-    font-size:4rem;
-    margin-bottom: -4%;
-    animation-name: slide1;
-    animation-duration: 1s;
+  color: rgb(216, 216, 216);
+  font-family: "Archivo Black", sans-serif;
+  font-weight: bolder;
+  font-style: normal;
+  font-size: 4rem;
+  margin-bottom: -4%;
+  animation-name: slide1;
+  animation-duration: 1s;
 }
+
 #secondary-name {
-    color: transparent;
-    font-family: "Archivo Black", sans-serif;
-    -webkit-text-stroke: 2px rgb(216, 216, 216);
-    font-size: 3rem;
-    animation-name: slide1;
-    animation-duration: 1s;
-    animation-delay: 0.1s;
-    transform: translateX(-100vw);
-    animation-fill-mode: forwards;
+  color: transparent;
+  font-family: "Archivo Black", sans-serif;
+  -webkit-text-stroke: 2px rgb(216, 216, 216);
+  font-size: 3rem;
+  animation-name: slide1;
+  animation-duration: 1s;
+  animation-delay: 0.1s;
+  transform: translateX(-100vw);
+  animation-fill-mode: forwards;
 }
+
 @keyframes slide1 {
-  from{transform: translateX(-100vw);}
-  to{transform:translateX(0)}
+  from {
+    transform: translateX(-100vw);
+  }
+
+  to {
+    transform: translateX(0)
+  }
 }
 
 
 /* Styles for AddButton */
-.btn-container-inactive, .btn-container-active{
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 80px;
-    margin-right: 80px;
-    position: fixed;
-    bottom:0;
-    right:0;
-    border: 2px solid #c4c4c4;
-    border-radius: 20px;
-    padding: 10px;
-    transition: 0.3s;
-}    
-.btn-container-active:hover, .btn-container-inactive:hover {
-  scale:1.2;
+.btn-container-inactive,
+.btn-container-active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 80px;
+  margin-right: 80px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  border: 2px solid #c4c4c4;
+  border-radius: 20px;
+  padding: 10px;
+  transition: 0.3s;
+  z-index: 3;
+}
+
+.btn-container-active:hover,
+.btn-container-inactive:hover {
+  scale: 1.2;
   border: 2px solid #ebebeb;
 }
-.btn-container-active:active, .btn-container-inactive:active {
-  scale:0.9;
+
+.btn-container-active:active,
+.btn-container-inactive:active {
+  scale: 0.9;
   border: 2px solid #ffffff;
 }
-.btn-container-active{
-  transform: rotate(45deg);
+
+.btn-container-active {
+  transform: rotate(-45deg);
 }
+
 .plus {
-  --b: 8px;   /* the thickness*/
-  --c: #0000 90deg,#c4c4c4 0; /* the coloration */
-  width: 20px; /* the size */
+  --b: 8px;
+  /* the thickness*/
+  --c: #0000 90deg, #c4c4c4 0;
+  /* the coloration */
+  width: 20px;
+  /* the size */
   aspect-ratio: 1;
   background:
-    conic-gradient(from 90deg at var(--b) var(--b),var(--c)) 
-    calc(100% + var(--b)/2) calc(100% + var(--b)/2)/
-    calc(50%  + var(--b))   calc(50%  + var(--b));
+    conic-gradient(from 90deg at var(--b) var(--b), var(--c)) calc(100% + var(--b)/2) calc(100% + var(--b)/2)/ calc(50% + var(--b)) calc(50% + var(--b));
   padding: 10px;
 }
-.plus:hover{
-  --c: #0000 90deg,#ffffff 0;
+
+.plus:hover {
+  --c: #0000 90deg, #ffffff 0;
 }
 
 /* Styles for AddForm */
-:root{
-  --primary: #f7f7f7;
-  --secondary: #000000;
-  --accent: #a1a1a1;
-  --shadow: 8px 8px 0px var(--primary);
+.form-container {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #040404; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2; 
 }
-.login-active, .login-inactive {
-  width: 100%;
-  max-width: 400px;
-  border: 1px solid var(--primary);
-  padding: 40px 30px;
-  background-color: var(--secondary);
-  box-shadow: var(--shadow);
-  position: absolute;
-  border-radius: 12px;
-  overflow:scroll;
-  transition: 0.5s;
-  margin-left: 60%;
-}
-.login-inactive{
-  margin-top:60rem;
-  visibility:hidden;
+.memory-form {
 
 }
-.login-active{
-  margin-top: 22rem;
+.memory-form {
+    background-color: #1a1a1a; 
+    border: 1px solid #ffffff;
+    padding: 2rem 3rem;
+    width: 320px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
-.login-container::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  right: -6px;
-  bottom: -6px;
-  border: 1px solid var(--primary);
-  z-index: -1;
-  border-radius: 12px;
+.memory-form h2 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    text-align: left;
 }
-.add-title {
-  color: var(--primary);
-  margin-bottom: 30px;
-  font-size: 28px;
-  font-weight: 700;
-  text-align: center;
+.memory-form .input-group {
+    margin-bottom: 1.5rem;
+    position: relative;
 }
-.input-group {
-  margin-bottom: 20px;
-  max-width: 364px;
-  position: relative;
+.memory-form label {
+    display: block;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
 }
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: var(--primary);
+.memory-form input[type="text"],
+.memory-form input[type="date"],
+.memory-form input[type="file"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #444;
+    padding: 0.5rem 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
-input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 2px solid var(--primary);
-  background-color: var(--secondary);
-  font-size: 16px;
-  outline: none;
-  transition: all 0.3s;
+.memory-form input:focus {
+    border-bottom-color: #ffffff; 
 }
-input:focus {
-  box-shadow: 4px 4px 0px var(--primary);
+.memory-form .btn-form {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #ffffff;
+    color: #121212;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
-button {
-  width: 100%;
-  padding: 12px;
-  background-color: var(--accent);
-  color: #000000;
-  border: 2px solid var(--primary);
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: all 0.3s;
-  animation-name: slideUp;
-  animation-duration: 1s;
+.memory-form .btn-form:hover {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    outline: 1px solid #ffffff;
 }
-button:hover {
-  box-shadow: 4px 4px 0px var(--primary);
-  transform: translate(-2px, -2px);
+.memory-form.memory-done {
+  transition: 0.3s;
+  transform: translateY(-70vh);
+  pointer-events: none;
 }
-@keyframes slideUp{
-  from{transform: translateY(-100px);}
-  to{transform:translateY(0)}
+.form-container.form-container-done{
+  transition: 0.3s;
+  opacity: 0;
+  pointer-events: none;
 }
+
+/* Add styles for Login*/
+.login-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #040404; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; 
+}
+.login-form {
+    background-color: #1a1a1a; 
+    border: 1px solid #ffffff;
+    padding: 2rem 3rem;
+    width: 320px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.login-form h2 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+.login-form .input-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+.login-form label {
+    display: block;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #444;
+    padding: 0.5rem 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+.login-form input:focus {
+    border-bottom-color: #ffffff; 
+}
+.login-form .btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #ffffff;
+    color: #121212;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.login-form .btn-login:hover {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    outline: 1px solid #ffffff;
+}
+.login-form.login-done {
+  transition: 0.3s;
+  transform: translateY(-70vh);
+  pointer-events: none;
+}
+.login-overlay.login-overlay-done{
+  transition: 0.3s;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Styles for Arrows */
 .arrow-right,
-.arrow-left {
+.arrow-left, .arrow-down, .arrow-up {
   display: block;
   width: 25px;
   height: 25px;
@@ -204,32 +301,37 @@ button:hover {
 }
 .arrow-right {
   transform: rotate(135deg) scale(2);
-  margin-left: 85%;
-  margin-top: 450px;
+  margin-left: 30vw;
+  margin-bottom: 10px ;
 }
-.arrow-right:hover {
-  scale: 1.2;
-  border-color: #ffffff;
-
-}
-.arrow-left{
+.arrow-left {
   transform: rotate(-45deg) scale(2);
-  margin-left: 13%;
-  margin-top: 450px;
-    
-}
-.arrow-left:hover{
-  scale: 1.2;
-  border-color: #ffffff;
+  margin-left: -30vw;
 
 }
-.arrow-left:active, .arrow-right:active {
+.arrow-down {
+  transform: rotate(-135deg) scale(2);
+  margin-top: 23vw;
+}
+.arrow-up {
+  transform: rotate(45deg) scale(2);
+  margin-top: 60vw;
+}
+.arrow-right:hover, .arrow-down:hover, .arrow-up:hover, .arrow-left:hover  {
+  scale: 1.2;
+  border-color: #ffffff;
+}
+.arrow-left:active,
+.arrow-right:active,
+.arrow-down:active,
+.arrow-up:active {
   scale: 0.9;
 }
 
 /* Styles for MemoryInfo */
-.modal-inactive, .modal-active {
-  position:absolute;
+.modal-inactive,
+.modal-active {
+  position: absolute;
   font-family: "Archivo Black", sans-serif;
   color: white;
   text-align: right;
@@ -241,37 +343,48 @@ button:hover {
   transition: 1s;
   z-index: 10;
 }
-.modal-inactive h1, .modal-active h1{
+
+.modal-inactive h1,
+.modal-active h1 {
   font-size: 90px;
   color: rgb(255, 255, 255);
   margin-bottom: -15px;
 }
-.modal-inactive h3, .modal-active h3{
+
+.modal-inactive h3,
+.modal-active h3 {
   color: rgb(216, 216, 216);
   font-size: 40px;
   margin-bottom: -10px;
 }
-.modal-inactive{
+
+.modal-inactive {
   transform: translateX(60vw);
 }
-.modal-active{
+
+.modal-active {
   transform: translateX(0vw);
 }
-.overlayb-active, .overlayb-inactive {
+
+.overlayb-active,
+.overlayb-inactive {
   position: fixed;
   height: 100vh;
   width: 100vw;
   transition: 1s;
   pointer-events: none;
 }
-.overlayb-active{
+
+.overlayb-active {
   background-color: black;
   opacity: 70%;
 }
-.overlayb-inactive{
+
+.overlayb-inactive {
   opacity: 0%;
 }
-.x{
+
+.x {
   font-family: 'Times New Roman', Times, serif;
   font-weight: lighter;
   position: absolute;
@@ -280,5 +393,5 @@ button:hover {
   cursor: pointer;
   scale: 3;
   margin-left: 1000px;
-  margin-top: 20px ;
+  margin-top: 20px;
 }
