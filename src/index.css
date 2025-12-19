@@ -320,7 +320,7 @@ body {
 }
 .arrow-down {
   transform: rotate(-135deg) scale(2);
-  margin-top: 23vw;
+  margin-top: 20vw;
 }
 .arrow-up {
   transform: rotate(45deg) scale(2);

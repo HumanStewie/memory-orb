@@ -1,16 +1,11 @@
-from typing import Union
+from typing import Annotated
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, HTTPException, Query
+from sqlmodel import Field, Session, SQLModel, create_engine, select
 
-import asyncio
-import asyncpg
 
-async def run():
-    conn = await asyncpg.connect(user='memorycube', database='mcDB')
-    values = await conn.fetch(
-        'SELECT * FROM users'
-    )
-    print(values)
-    await conn.close()
-
-asyncio.run(run())
+class Hero(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(index=True)
+    age: int | None = Field(default=None, index=True)
+    secret_name: str

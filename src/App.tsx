@@ -1,45 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/immutability */
 import "./App.css";
-import vShader from "./shaders/vertex";
-import fShader from "./shaders/fragment";
-import lfShader from "./shaders/fragmentLine";
-import lvShader from "./shaders/vertexLine";
-import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
-import type { BlurPass, Resizer, KernelSize, Resolution } from "postprocessing";
-import {
-  Html,
-  MeshReflectorMaterial,
-  MeshRefractionMaterial,
-  OrbitControls,
-  PerspectiveCamera,
-  useFBO,
-  Wireframe,
-} from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
-import { float, mat2, vec2 } from "three/tsl";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { plane } from "three/examples/jsm/Addons.js";
+import { useState } from "react";
 import {
   Bloom,
   ChromaticAberration,
   EffectComposer,
-  HueSaturation,
   Noise,
-  Scanline,
 } from "@react-three/postprocessing";
-import gsap from "gsap";
 import MemoryInfo from "./components/MemoryInfo";
-import Arrows from "./components/Arrows";
 import {
   BlendFunction,
-  BoxBlurPass,
-  Effect,
-  GaussianBlurPass,
-  KawaseBlurPass,
-  RenderPass,
 } from "postprocessing";
-import MemoryName from "./components/MemoryName";
 import MainIco from "./components/MainIco";
 import Login from "./components/Login";
 
@@ -74,7 +48,7 @@ function App() {
               setActive("active");
             }}
           />
-          {/*<PostProcess />*/}
+          {<PostProcess />}
         </Canvas>
       </div>
       <Login />
