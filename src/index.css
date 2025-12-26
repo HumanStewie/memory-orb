@@ -33,8 +33,42 @@ body {
   margin-top: -45vh;
   margin-right: -50vw;
   left: -40vw;
+  text-transform: uppercase;
 }
-
+#mem-count {
+  position: absolute;
+  color: rgb(216, 216, 216);
+  font-family: "Archivo Black", sans-serif;
+  font-weight: bolder;
+  font-style: normal;
+  font-size: 4rem;
+  bottom: 18.38rem;
+  right: 47rem;
+  animation-name: fade1;
+  animation-duration: 1.5s;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+#mem-total {
+  position: absolute;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  color: transparent;
+  font-family: "Archivo Black", sans-serif;
+  -webkit-text-stroke: 2px rgb(216, 216, 216);
+  min-width: 100px;
+  font-size: 2rem;
+  bottom: 24rem;
+  right: 44.65rem;
+  animation-name: fade1;
+  animation-duration: 1.5s;
+}
 #main-name {
   color: rgb(216, 216, 216);
   font-family: "Archivo Black", sans-serif;
@@ -65,6 +99,15 @@ body {
 
   to {
     transform: translateX(0)
+  }
+}
+@keyframes fade1 {
+  from {
+    opacity: 0%;
+  }
+
+  to {
+    opacity: 100%;
   }
 }
 
@@ -213,6 +256,26 @@ body {
   opacity: 0;
   pointer-events: none;
 }
+.memory-form textarea{
+  max-width: 100%;
+  min-width: 100%;
+  max-height: 30%;
+  resize: none;
+  width: 100%;
+  height: 6rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #444;
+  padding: 0.5rem 0;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.memory-form textarea:focus {
+    border-bottom-color: #ffffff; 
+}
 
 
 /* Add styles for Login*/
@@ -226,6 +289,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     z-index: 100; 
 }
 .login-form {
@@ -295,6 +359,50 @@ body {
   transition: 0.3s;
   opacity: 0;
   pointer-events: none;
+}
+.logout-btn{
+  position: absolute;
+  right: 5rem;
+  top:6rem;
+  z-index: 10;
+  padding: 0.75rem;
+  background-color: #ffffff;
+  color: #121212;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.logout-btn:hover{
+  background-color: #1a1a1a;
+  color: #ffffff;
+  outline: 1px solid #ffffff;
+}
+.delete-btn{
+  position: absolute;
+  right: 5rem;
+  top:10rem;
+  z-index: 10;
+  padding: 0.75rem;
+  background-color: #be2424;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.delete-btn:hover{
+  background-color: #1e4c9c;
+  color: #ffffff;
+  outline: 1px solid #ffffff;
 }
 
 /* Styles for Arrows */

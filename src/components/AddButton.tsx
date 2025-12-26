@@ -1,4 +1,3 @@
-import gsap from "gsap";
 import { useState } from "react";
 
 interface FormProps {
@@ -7,10 +6,34 @@ interface FormProps {
 
 function AddForm({ onClick }: FormProps) {
   const [active, setActive] = useState(false);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setActive(true);
+  const [isFile, setIsFile] = useState(true);
+  const [file, setFile] = useState(null!);
+  const handleFile = (e: any) => {
+    setFile(e.target.files[0]);
   };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/memory`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      if (response.ok) {
+        setActive(true);
+        window.location.reload();
+      } else if (response.status == 400) {
+        setIsFile(false);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       className={`form-container ${
@@ -28,8 +51,18 @@ function AddForm({ onClick }: FormProps) {
           <input
             type="text"
             id="memoryName"
+            name="memoryName"
             placeholder="a wonderful memory"
           ></input>
+        </div>
+        <div className="input-group">
+          <label htmlFor="memoryName">Memory Info - 200 words</label>
+          <textarea
+            id="memoryInfo"
+            name="memoryInfo"
+            maxLength={200}
+            placeholder="must have been a wonderful memory. express it, with your beautiful heart. this too shall pass."
+          ></textarea>
         </div>
         <div className="input-group">
           <label htmlFor="date">Date</label>
@@ -37,10 +70,15 @@ function AddForm({ onClick }: FormProps) {
         </div>
         <div className="input-group">
           <label htmlFor="memoryImage">Memory Image</label>
-          <input type="file" id="memoryImage" name="memoryImage"></input>
+          <input
+            type="file"
+            id="memoryImage"
+            name="memoryImage"
+            onChange={handleFile}
+          ></input>
         </div>
-        <button type="submit" className="btn-form" onClick={onClick}>
-          Add Memory
+        <button type="submit" className="btn-form">
+          {isFile ? "Add Memory" : "Add Memory - no image found."}
         </button>
       </form>
     </div>
@@ -58,8 +96,11 @@ export default function AddButton() {
       >
         <div className="plus"></div>
       </div>
-            {state === "inactive" ? "" : <AddForm onClick={() => setState('inactive')}/>}
-
+      {state === "inactive" ? (
+        ""
+      ) : (
+        <AddForm onClick={() => setState("inactive")} />
+      )}
     </>
   );
 }

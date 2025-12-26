@@ -3,16 +3,20 @@ import fShader from "../shaders/fragment";
 import lfShader from "../shaders/fragmentLine";
 import lvShader from "../shaders/vertexLine";
 import { useFrame, useThree } from "@react-three/fiber";
-import {
-  Html
-} from "@react-three/drei";
+import { Html, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import gsap from "gsap";
 import MemoryName from "./MemoryName";
 
 interface IcoProps {
   onClick: () => void;
+  currentImg: React.RefObject<number>;
+  nameRef: React.RefObject<null>;
+  dateRef: React.RefObject<null>;
+  infoRef: React.RefObject<null>;
+  idRef: React.RefObject<null>;
+  texRef: React.RefObject<THREE.Texture[]>;
 }
 
 export default function MainIco({ onClick }: IcoProps) {
@@ -20,15 +24,46 @@ export default function MainIco({ onClick }: IcoProps) {
   const mesh2 = useRef<THREE.Mesh>(null);
   const mat1Ref = useRef<THREE.ShaderMaterial>(null);
   const mat2Ref = useRef<THREE.ShaderMaterial>(null);
+  const [name, setName] = useState(null!);
+  const [date, setDate] = useState(null!);
+  const [info, setInfo] = useState(null!);
   const { camera } = useThree();
   const tl = gsap.timeline();
-  const t = new THREE.TextureLoader().load(
+  useEffect(() => {
+    if (nameRef.current) setName(nameRef.current[0]);
+    if (dateRef.current) setDate(dateRef.current[0]);
+    if (infoRef.current) setInfo(infoRef.current[0]);
+    if (textures.length > 0) {
+      uniform1.uTexture.value = textures[0];
+    }
+  });
+  const setDetails = () => {
+    if (nameRef.current) setName(nameRef.current[currentImg.current]);
+    if (dateRef.current) setDate(dateRef.current[currentImg.current]);
+    if (infoRef.current) setInfo(infoRef.current[currentImg.current]);
+  };
+  const getTexture = (direction: "next" | "last") => {
+    const listT = texRef.current;
+    if (listT.length === 0) return null;
+    if (direction === "next") {
+      currentImg.current = (currentImg.current + 1) % listT.length;
+    } else {
+      currentImg.current =
+        (currentImg.current - 1 + listT.length) % listT.length;
+    }
+    console.log(currentImg.current);
+    return listT[currentImg.current];
+  };
+
+  /*const t = new THREE.TextureLoader().load(
     "/hypothetically-couldnt-rae-shrink-down-and-get-inside-my-v0-zqnsul89e9vf1.webp"
   );
   t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
-  const t2 = new THREE.TextureLoader().load("/w.jpg");
+  const t2 = new THREE.TextureLoader().load(
+    "https://res.cloudinary.com/memorystorage/image/upload/v1766634482/ikevtq6xhifuegsypsps.png"
+  );
   t2.wrapS = t2.wrapT = THREE.MirroredRepeatWrapping;
-
+  */
   const uniform1 = useMemo(
     () => ({
       uTime: { type: "f", value: 0.0 },
@@ -37,7 +72,7 @@ export default function MainIco({ onClick }: IcoProps) {
         value: new THREE.Vector2(window.innerWidth, window.innerHeight),
       },
       uTexture: {
-        value: t,
+        value: new THREE.Texture(),
       },
       uColor: { value: 1.0 },
       uSpeed: { value: 0.0 },
@@ -52,7 +87,7 @@ export default function MainIco({ onClick }: IcoProps) {
     }),
     []
   );
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (mat1Ref.current) {
       mat1Ref.current.uniforms.uTime.value += delta;
     }
@@ -68,6 +103,7 @@ export default function MainIco({ onClick }: IcoProps) {
       mesh2.current.rotation.y += delta / 10;
     }
   });
+
   useEffect(() => {
     setupAttributes(mesh2.current?.geometry);
     // Get input
@@ -82,7 +118,10 @@ export default function MainIco({ onClick }: IcoProps) {
             ease: "power4.out",
           });
           setTimeout(() => {
-            uniform1.uTexture.value = t2;
+            uniform1.uTexture.value = getTexture("next")!;
+
+            localStorage.removeItem("index");
+            localStorage.setItem("index", `${currentImg.current}`);
           }, 100);
         }
       }
@@ -98,35 +137,39 @@ export default function MainIco({ onClick }: IcoProps) {
             ease: "power4.out",
           });
           setTimeout(() => {
-            uniform1.uTexture.value = t;
+            uniform1.uTexture.value = getTexture("last")!;
+            if (nameRef.current) setName(nameRef.current[currentImg.current]);
+            if (dateRef.current) setDate(dateRef.current[currentImg.current]);
+            if (infoRef.current) setInfo(infoRef.current[currentImg.current]);
+            localStorage.removeItem("index");
+            localStorage.setItem("index", `${currentImg.current}`);
           }, 100);
         }
       }
     });
-    
-  });
-  window.addEventListener("keydown", (e) => {
-    if (!tl.isActive()) {
-      if (e.key == "ArrowDown") {
-        tl.to(camera.rotation, {
-          x: -Math.PI,
-          duration: 2,
-          ease: "power4.out",
-        });
+    window.addEventListener("keydown", (e) => {
+      if (!tl.isActive()) {
+        if (e.key == "ArrowDown") {
+          tl.to(camera.rotation, {
+            x: -Math.PI,
+            duration: 2,
+            ease: "power4.out",
+          });
+        }
       }
-    }
-  });
-  window.addEventListener("keydown", (e) => {
-    if (!tl.isActive()) {
-      if (e.key == "ArrowUp") {
-        tl.to(camera.rotation, {
-          x: 0,
-          duration: 2,
-          ease: "power4.out",
-        });
+    });
+    window.addEventListener("keydown", (e) => {
+      if (!tl.isActive()) {
+        if (e.key == "ArrowUp") {
+          tl.to(camera.rotation, {
+            x: 0,
+            duration: 2,
+            ease: "power4.out",
+          });
+        }
       }
-    }
-  });
+    });
+  }, []);
 
   return (
     <>
@@ -143,7 +186,15 @@ export default function MainIco({ onClick }: IcoProps) {
                 ease: "power4.out",
               });
               setTimeout(() => {
-                uniform1.uTexture.value = t2;
+                uniform1.uTexture.value = getTexture("next")!;
+                if (nameRef.current)
+                  setName(nameRef.current[currentImg.current]);
+                if (dateRef.current)
+                  setDate(dateRef.current[currentImg.current]);
+                if (infoRef.current)
+                  setInfo(infoRef.current[currentImg.current]);
+                localStorage.removeItem("index");
+                localStorage.setItem("index", `${currentImg.current}`);
               }, 100);
             }
           }}
@@ -160,7 +211,15 @@ export default function MainIco({ onClick }: IcoProps) {
                 ease: "power4.out",
               });
               setTimeout(() => {
-                uniform1.uTexture.value = t;
+                uniform1.uTexture.value = getTexture("last")!;
+                if (nameRef.current)
+                  setName(nameRef.current[currentImg.current]);
+                if (dateRef.current)
+                  setDate(dateRef.current[currentImg.current]);
+                if (infoRef.current)
+                  setInfo(infoRef.current[currentImg.current]);
+                localStorage.removeItem("index");
+                localStorage.setItem("index", `${currentImg.current}`);
               }, 100);
             }
           }}
@@ -177,7 +236,13 @@ export default function MainIco({ onClick }: IcoProps) {
             }
           }}
         ></div>
-        <MemoryName />
+
+        <MemoryName
+          name={name}
+          date={date}
+          count={`${currentImg.current + 1}`}
+          length={`${texRef.current.length}`}
+        />
       </Html>
       <mesh
         rotation={[0, 0, 0]}
@@ -253,7 +318,7 @@ export default function MainIco({ onClick }: IcoProps) {
 }
 
 // Barycentric coordinates
-function setupAttributes(geometry) {
+function setupAttributes(geometry: any) {
   const length = geometry.attributes.position.array.length;
   const bary = [];
   for (let i = 0; i < length / 3; i++) {
