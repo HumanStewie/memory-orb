@@ -3,44 +3,50 @@ import fShader from "../shaders/fragment";
 import lfShader from "../shaders/fragmentLine";
 import lvShader from "../shaders/vertexLine";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Html, useTexture } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
-import { memo, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import MemoryName from "./MemoryName";
+import MemoryInfo from "./MemoryInfo";
 
 interface IcoProps {
-  onClick: () => void;
   currentImg: React.RefObject<number>;
-  nameRef: React.RefObject<null>;
-  dateRef: React.RefObject<null>;
-  infoRef: React.RefObject<null>;
-  idRef: React.RefObject<null>;
+  nameRef: React.RefObject<any[]>;
+  dateRef: React.RefObject<any[]>;
+  infoRef: React.RefObject<any[]>;
+  imgRef: React.RefObject<any[]>;
   texRef: React.RefObject<THREE.Texture[]>;
 }
 
-export default function MainIco({ onClick }: IcoProps) {
+export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef, texRef }: IcoProps) {
   const mesh1 = useRef<THREE.Mesh>(null);
   const mesh2 = useRef<THREE.Mesh>(null);
   const mat1Ref = useRef<THREE.ShaderMaterial>(null);
   const mat2Ref = useRef<THREE.ShaderMaterial>(null);
   const [name, setName] = useState(null!);
   const [date, setDate] = useState(null!);
-  const [info, setInfo] = useState(null!);
   const { camera } = useThree();
   const tl = gsap.timeline();
   useEffect(() => {
-    if (nameRef.current) setName(nameRef.current[0]);
-    if (dateRef.current) setDate(dateRef.current[0]);
-    if (infoRef.current) setInfo(infoRef.current[0]);
-    if (textures.length > 0) {
-      uniform1.uTexture.value = textures[0];
+    
+    if (nameRef.current && nameRef.current.length > 0) setName(nameRef.current[0]);
+    if (dateRef.current && dateRef.current.length > 0) {
+      dateRef.current[0] = dateRef.current[0].split("T")[0].split("-").reverse().join("/")
+      setDate(dateRef.current[0]);
     }
-  });
+    if (texRef.current.length > 0) {
+      uniform1.uTexture.value = texRef.current[0];
+    }
+  }, [nameRef, dateRef, infoRef, texRef]);
   const setDetails = () => {
+    
     if (nameRef.current) setName(nameRef.current[currentImg.current]);
-    if (dateRef.current) setDate(dateRef.current[currentImg.current]);
-    if (infoRef.current) setInfo(infoRef.current[currentImg.current]);
+    if (dateRef.current) {
+      dateRef.current[currentImg.current] = dateRef.current[currentImg.current].split("T")[0].split("-").reverse().join("/");
+      setDate(dateRef.current[currentImg.current]);
+    }
+  
   };
   const getTexture = (direction: "next" | "last") => {
     const listT = texRef.current;
@@ -51,19 +57,9 @@ export default function MainIco({ onClick }: IcoProps) {
       currentImg.current =
         (currentImg.current - 1 + listT.length) % listT.length;
     }
-    console.log(currentImg.current);
     return listT[currentImg.current];
   };
 
-  /*const t = new THREE.TextureLoader().load(
-    "/hypothetically-couldnt-rae-shrink-down-and-get-inside-my-v0-zqnsul89e9vf1.webp"
-  );
-  t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
-  const t2 = new THREE.TextureLoader().load(
-    "https://res.cloudinary.com/memorystorage/image/upload/v1766634482/ikevtq6xhifuegsypsps.png"
-  );
-  t2.wrapS = t2.wrapT = THREE.MirroredRepeatWrapping;
-  */
   const uniform1 = useMemo(
     () => ({
       uTime: { type: "f", value: 0.0 },
@@ -119,16 +115,11 @@ export default function MainIco({ onClick }: IcoProps) {
           });
           setTimeout(() => {
             uniform1.uTexture.value = getTexture("next")!;
-
-            localStorage.removeItem("index");
-            localStorage.setItem("index", `${currentImg.current}`);
+            setDetails()
+            console.log(date)
           }, 100);
         }
-      }
-    });
-    window.addEventListener("keydown", (e) => {
-      if (!tl.isActive()) {
-        if (e.key == "ArrowLeft") {
+        else if (e.key == "ArrowLeft") {
           tl.to(camera.rotation, {
             x: 0,
             y: camera.rotation.y + Math.PI * 2,
@@ -138,31 +129,19 @@ export default function MainIco({ onClick }: IcoProps) {
           });
           setTimeout(() => {
             uniform1.uTexture.value = getTexture("last")!;
-            if (nameRef.current) setName(nameRef.current[currentImg.current]);
-            if (dateRef.current) setDate(dateRef.current[currentImg.current]);
-            if (infoRef.current) setInfo(infoRef.current[currentImg.current]);
-            localStorage.removeItem("index");
-            localStorage.setItem("index", `${currentImg.current}`);
+            setDetails()
           }, 100);
         }
-      }
-    });
-    window.addEventListener("keydown", (e) => {
-      if (!tl.isActive()) {
-        if (e.key == "ArrowDown") {
+        else if (e.key == "ArrowUp") {
           tl.to(camera.rotation, {
-            x: -Math.PI,
+            x: 0,
             duration: 2,
             ease: "power4.out",
           });
         }
-      }
-    });
-    window.addEventListener("keydown", (e) => {
-      if (!tl.isActive()) {
-        if (e.key == "ArrowUp") {
+        else if (e.key == "ArrowDown") {
           tl.to(camera.rotation, {
-            x: 0,
+            x: -Math.PI/2,
             duration: 2,
             ease: "power4.out",
           });
@@ -187,14 +166,7 @@ export default function MainIco({ onClick }: IcoProps) {
               });
               setTimeout(() => {
                 uniform1.uTexture.value = getTexture("next")!;
-                if (nameRef.current)
-                  setName(nameRef.current[currentImg.current]);
-                if (dateRef.current)
-                  setDate(dateRef.current[currentImg.current]);
-                if (infoRef.current)
-                  setInfo(infoRef.current[currentImg.current]);
-                localStorage.removeItem("index");
-                localStorage.setItem("index", `${currentImg.current}`);
+                setDetails()
               }, 100);
             }
           }}
@@ -212,14 +184,7 @@ export default function MainIco({ onClick }: IcoProps) {
               });
               setTimeout(() => {
                 uniform1.uTexture.value = getTexture("last")!;
-                if (nameRef.current)
-                  setName(nameRef.current[currentImg.current]);
-                if (dateRef.current)
-                  setDate(dateRef.current[currentImg.current]);
-                if (infoRef.current)
-                  setInfo(infoRef.current[currentImg.current]);
-                localStorage.removeItem("index");
-                localStorage.setItem("index", `${currentImg.current}`);
+                setDetails()
               }, 100);
             }
           }}
@@ -229,7 +194,7 @@ export default function MainIco({ onClick }: IcoProps) {
           onClick={() => {
             if (!tl.isActive()) {
               tl.to(camera.rotation, {
-                x: -Math.PI,
+                x: -Math.PI/2,
                 duration: 2,
                 ease: "power4.out",
               });
@@ -243,6 +208,24 @@ export default function MainIco({ onClick }: IcoProps) {
           count={`${currentImg.current + 1}`}
           length={`${texRef.current.length}`}
         />
+      </Html>
+      <Html position={[0, -9, 0]} rotation={[0, 0, 10]}>
+        <div
+            className="arrow-up"
+            onClick={() => {
+              if (!tl.isActive()) {
+                tl.to(camera.rotation, {
+                  x: 0,
+                  duration: 2,
+                  ease: "power4.out",
+                });
+              }
+            }}
+          ></div>
+      </Html>
+      <Html position={[0, -6, 0]} rotation={[0, 0, 10]} fullscreen>
+        
+        <MemoryInfo nameRef={nameRef} dateRef={dateRef} infoRef={infoRef} currentImg={currentImg} imgRef={imgRef}/>
       </Html>
       <mesh
         rotation={[0, 0, 0]}
@@ -292,8 +275,7 @@ export default function MainIco({ onClick }: IcoProps) {
             });
           }
         }}
-        onClick={onClick}
-      >
+        >
         <icosahedronGeometry args={[1, 1]} />
         <shaderMaterial
           ref={mat1Ref}

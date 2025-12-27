@@ -82,7 +82,7 @@ async def signup(data : LoginData, session : Session = Depends(get_session)):
         return JSONResponse(status_code=400, content={"Status": "Invalid username or password"})
     else:
         hashed = get_password_hash(data.password)
-        new_user = Users(username=data.username, password_hash=hashed)
+        new_user = Users(username=data.username, password_hash=hashed) # type: ignore
         session.add(new_user)
         session.commit()
         session.refresh(new_user)
@@ -126,16 +126,17 @@ async def create_memory(memoryName : str = Form(),
 @app.get("/get_memory", response_model=List[Memory])
 async def get_memory(current_user = Depends(get_current_user),
                      session : Session = Depends(get_session)):
-    memoryObj = session.exec(select(Memory.id, Memory.memory_name, Memory.memory_info, Memory.memory_date, Memory.memory_img_url).where(Memory.user_id == current_user.id)).all()
+    memoryObj = session.exec(select(Memory.id, Memory.memory_name, Memory.memory_info, Memory.memory_date, Memory.memory_img_url).where(Memory.user_id == current_user.id)).all() # type: ignore
     # [('name', 'info', 'date', 'url'), (...)]
     if memoryObj is None:
         return JSONResponse(status_code=400, content={"Status": "No Details given."})
+    
     return memoryObj
 
 @app.delete("/delete_memory/{memory_id}")
 async def delete_memory(memory_id : int, current_user = Depends(get_current_user),
                      session : Session = Depends(get_session)):
-    memory = session.get(Memory, memory_id)
+    memory = session.exec(select(Memory).where(Memory.id == memory_id)).first()
     if not memory:
         raise HTTPException(status_code=404, detail="Memory not found.")
     

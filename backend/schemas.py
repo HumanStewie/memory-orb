@@ -9,3 +9,4 @@ class UserPublic(SQLModel):
 class UserCreate(SQLModel):
     username: str
     password: str
+    

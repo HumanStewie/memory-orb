@@ -42,7 +42,7 @@ body {
   font-weight: bolder;
   font-style: normal;
   font-size: 4rem;
-  bottom: 18.38rem;
+  bottom: 15.9rem;
   right: 47rem;
   animation-name: fade1;
   animation-duration: 1.5s;
@@ -432,7 +432,7 @@ body {
 }
 .arrow-up {
   transform: rotate(45deg) scale(2);
-  margin-top: 60vw;
+  margin-top: -25vh;
 }
 .arrow-right:hover, .arrow-down:hover, .arrow-up:hover, .arrow-left:hover  {
   scale: 1.2;
@@ -446,69 +446,54 @@ body {
 }
 
 /* Styles for MemoryInfo */
-.modal-inactive,
-.modal-active {
+.modal {
   position: absolute;
-  font-family: "Archivo Black", sans-serif;
-  color: white;
-  text-align: right;
-  margin-left: 800px;
-  margin-right: 100px;
-  margin-top: 10px;
-  max-height: calc(100vh - 210px);
-  overflow-y: auto;
-  transition: 1s;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%); /* Moves it back by half its width to perfectly center it */
+  width: 90%;          /* Occupy 90% of the screen on laptops/phones */
+  max-width: 1300px;   /* STOP stretching if the screen is wider than 1100px */
+  display: flex;
+  justify-content: space-between; /* Spreads image and text to the edges of the box above */
+  align-items: center;
+  gap: 4rem;
   z-index: 10;
+  pointer-events: none; /* Good practice: lets you click the 3D background */
 }
 
-.modal-inactive h1,
-.modal-active h1 {
-  font-size: 90px;
+.modal h1 {
+  font-size: clamp(20px, 5vw, 60px);
   color: rgb(255, 255, 255);
   margin-bottom: -15px;
 }
 
-.modal-inactive h3,
-.modal-active h3 {
+.modal h3{
   color: rgb(216, 216, 216);
   font-size: 40px;
   margin-bottom: -10px;
 }
-
-.modal-inactive {
-  transform: translateX(60vw);
+.text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  pointer-events: auto;
+  max-width: 80ch;      
+  width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;   
+  word-break: break-word;
+  hyphens: auto;           
+  -webkit-hyphens: auto;
 }
-
-.modal-active {
-  transform: translateX(0vw);
+#mem-img {
+  width: 600px;  /* give it a real size so it doesn't vanish or explode */
+  height: auto;
+  object-fit: cover;
+  pointer-events: auto;
+  /* Prevents the image from getting squished by long text */
+  flex-shrink: 0;
 }
+#modal-info {
 
-.overlayb-active,
-.overlayb-inactive {
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  transition: 1s;
-  pointer-events: none;
-}
-
-.overlayb-active {
-  background-color: black;
-  opacity: 70%;
-}
-
-.overlayb-inactive {
-  opacity: 0%;
-}
-
-.x {
-  font-family: 'Times New Roman', Times, serif;
-  font-weight: lighter;
-  position: absolute;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  scale: 3;
-  margin-left: 1000px;
-  margin-top: 20px;
 }

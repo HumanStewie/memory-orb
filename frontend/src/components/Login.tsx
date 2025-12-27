@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 
-export default function Login() {
+interface Props{
+  idRef: React.RefObject<null>;
+  currentImg: React.RefObject<number>;
+}
+
+export default function Login({idRef, currentImg} : Props) {
   const [login, setLogin] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [isAuth, setIsAuth] = useState(true);
@@ -30,6 +35,7 @@ export default function Login() {
         // Status: 200
         localStorage.setItem("token", data.access_token);
         setLogin(true);
+        window.location.reload();
       } else if (response.status == 400) {
         // Status: 400
         setIsAuth(false);
@@ -49,12 +55,11 @@ export default function Login() {
   const handleDelete = async (e: any) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const mem_id = localStorage.getItem("mem_id")!;
-    const currIndex = localStorage.getItem("index")!;
+
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/delete_memory/memory_id=${
-          mem_id[Number(currIndex)]
+        `http://127.0.0.1:8000/delete_memory/${
+          idRef.current[currentImg.current]
         }`,
         {
           method: "DELETE",

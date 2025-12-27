@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/immutability */
-import "./App.css";
+import React from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
@@ -10,10 +10,10 @@ import {
   EffectComposer,
   Noise,
 } from "@react-three/postprocessing";
-import MemoryInfo from "./components/MemoryInfo";
 import { BlendFunction } from "postprocessing";
 import MainIco from "./components/MainIco";
 import Login from "./components/Login";
+import { OrbitControls } from "@react-three/drei";
 
 function PostProcess() {
   return (
@@ -50,61 +50,23 @@ const fetchMemories = async () => {
     console.log(error);
   }
 };
-
-async function CreateRefs() {
-  const currentImg = useRef(0);
-  const nameRef = useRef(null);
-  const infoRef = useRef(null);
-  const dateRef = useRef(null);
-  const idRef = useRef(null);
-  const texRef = useRef<THREE.Texture[]>([]);
-  const loader = new THREE.TextureLoader();
-  const memoryDetails = await fetchMemories();
-
-  const textures = memoryDetails.map((memos: any) => {
-    const t = loader.load(memos.memory_img_url);
-    t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
-    return t;
-  });
-  texRef.current = textures;
-
-  nameRef.current = memoryDetails.map((memos: any) => {
-    return memos.memory_name;
-  });
-  dateRef.current = memoryDetails.map((memos: any) => {
-    return memos.memory_date;
-  });
-  infoRef.current = memoryDetails.map((memos: any) => {
-    return memos.memory_info;
-  });
-  idRef.current = memoryDetails.map((memos: any) => {
-    return memos.id;
-  });
-  // Get our textures
-
-  return (
-    currentImg.current,
-    nameRef.current,
-    infoRef.current,
-    dateRef.current,
-    idRef.current,
-    texRef.current
-  );
-}
-
 function App() {
-  const [active, setActive] = useState("inactive");
+  const [active, setActive] = useState(false);
   const currentImg = useRef(0);
   const nameRef = useRef(null);
   const infoRef = useRef(null);
   const dateRef = useRef(null);
   const idRef = useRef(null);
   const texRef = useRef<THREE.Texture[]>([]);
+  const imgRef = useRef(null);
   const loader = new THREE.TextureLoader();
   useEffect(() => {
     const loadRefs = async () => {
       const memoryDetails = await fetchMemories();
-
+      setActive(true)
+      imgRef.current = memoryDetails.map((memos: any) => {
+        return memos.memory_img_url;
+      })
       const textures = memoryDetails.map((memos: any) => {
         const t = loader.load(memos.memory_img_url);
         t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
@@ -134,21 +96,20 @@ function App() {
           scene={{ background: new THREE.Color("#101010") }}
           camera={{ position: [0, 0, 2] }}
         >
-          <MainIco
-            onClick={() => {
-              setActive("active");
-            }}
+          {active && <MainIco
             nameRef={nameRef}
             dateRef={dateRef}
             infoRef={infoRef}
             idRef={idRef}
             texRef={texRef}
             currentImg={currentImg}
-          />
+            imgRef={imgRef}
+          />}
           {/*<PostProcess />*/}
+          
         </Canvas>
       </div>
-      <Login />
+      <Login idRef={idRef} currentImg={currentImg}/>
     </>
   );
 }

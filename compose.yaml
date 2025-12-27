@@ -1,0 +1,30 @@
+services:
+  backend:
+    env_file:
+      - ./backend/.env
+    build: ./backend
+    platform: linux/amd64
+    container_name: fastapi_server
+    environment:
+      - DATABASE_URL 
+      - SECRET_KEY
+      - ALGORITHM
+      - ACCESS_TOKEN_EXPIRE_MINUTES
+      - CLOUDINARY_URL
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+  
+  frontend:
+    build: ./frontend
+    container_name: react_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    environment:
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules

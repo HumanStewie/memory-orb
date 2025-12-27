@@ -1,0 +1,8 @@
+pyjwt
+fastapi[standard]
+passlib[argon2]
+cloudinary
+passlib[bcrypt]
+sqlmodel
+psycopg2
+python-dotenv
