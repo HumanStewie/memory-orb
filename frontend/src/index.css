@@ -433,6 +433,7 @@ body {
 .arrow-up {
   transform: rotate(45deg) scale(2);
   margin-top: -25vh;
+  z-index: 100;
 }
 .arrow-right:hover, .arrow-down:hover, .arrow-up:hover, .arrow-left:hover  {
   scale: 1.2;
@@ -450,15 +451,19 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translateX(-50%); /* Moves it back by half its width to perfectly center it */
-  width: 90%;          /* Occupy 90% of the screen on laptops/phones */
-  max-width: 1300px;   /* STOP stretching if the screen is wider than 1100px */
+  transform: translateX(-50%); 
+  width: 90%;          
+  max-width: 1300px;   
   display: flex;
-  justify-content: space-between; /* Spreads image and text to the edges of the box above */
+  justify-content: space-between; 
   align-items: center;
   gap: 4rem;
-  z-index: 10;
-  pointer-events: none; /* Good practice: lets you click the 3D background */
+  z-index: 2;
+  pointer-events: none; 
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .modal h1 {
@@ -487,13 +492,74 @@ body {
   -webkit-hyphens: auto;
 }
 #mem-img {
-  width: 600px;  /* give it a real size so it doesn't vanish or explode */
+  width: 600px;  
   height: auto;
   object-fit: cover;
   pointer-events: auto;
-  /* Prevents the image from getting squished by long text */
   flex-shrink: 0;
 }
-#modal-info {
 
+/* Styles for GenAI */
+.ai-box {
+  position: absolute;
+  bottom: -24rem;       
+  left: -50rem;         
+  width: 350px;       
+  max-height: 200px;  
+  background: rgba(15, 15, 15, 0.8);
+  backdrop-filter: blur(8px);        
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+  border-left: 4px solid white;   
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: white;
+  overflow-y: auto;  
+  font-size: 1.2rem;
+  line-height: 1.4;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+  animation-name: fade1;
+  animation-duration: 2s;
+  overflow-wrap: break-word;
+  word-wrap: break-word;   
+  word-break: break-word;
+  hyphens: auto;           
+  -webkit-hyphens: auto;
+  pointer-events: none; 
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.ai-box h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #f4f4f4;
+}
+.ai-box::-webkit-scrollbar {
+  width: 6px;
+}
+.ai-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ai-box::-webkit-scrollbar-thumb {
+  background: #555; 
+  border-radius: 3px;
+}
+.loading-dots::after {
+  content: '';
+  animation: ellipsis 1.5s infinite;
+  display: inline-block; 
+  position: absolute;
+  white-space: nowrap;
+  width: 1em;
+  text-align: left;
+}
+@keyframes ellipsis {
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75% { content: "..."; }
 }

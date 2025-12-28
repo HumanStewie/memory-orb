@@ -13,6 +13,7 @@ from jwt.exceptions import InvalidTokenError
 from datetime import timedelta, datetime, timezone
 from .storage import uploadImage, get_url
 
+
 app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 # Our React routing, this is for CORS to ensure connection with FastAPI - Run 'fastapi dev main.py'
@@ -123,13 +124,18 @@ async def create_memory(memoryName : str = Form(),
     session.refresh(new_memory)
     return {"Status": "New memory added!"}
 
+def select_current_memory(session : Session, user_id : int):
+    memoryObj = session.exec(select(Memory.id, Memory.memory_name, Memory.memory_info, Memory.memory_date, Memory.memory_img_url).where(Memory.user_id == user_id)).all() # type: ignore
+    if memoryObj is None:
+        return JSONResponse(status_code=400, content={"Status": "No Details given."})
+    return memoryObj
+
+
+
 @app.get("/get_memory", response_model=List[Memory])
 async def get_memory(current_user = Depends(get_current_user),
                      session : Session = Depends(get_session)):
-    memoryObj = session.exec(select(Memory.id, Memory.memory_name, Memory.memory_info, Memory.memory_date, Memory.memory_img_url).where(Memory.user_id == current_user.id)).all() # type: ignore
-    # [('name', 'info', 'date', 'url'), (...)]
-    if memoryObj is None:
-        return JSONResponse(status_code=400, content={"Status": "No Details given."})
+    memoryObj = select_current_memory(session, current_user.id)
     
     return memoryObj
 

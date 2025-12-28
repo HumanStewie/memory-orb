@@ -13,7 +13,6 @@ import {
 import { BlendFunction } from "postprocessing";
 import MainIco from "./components/MainIco";
 import Login from "./components/Login";
-import { OrbitControls } from "@react-three/drei";
 
 function PostProcess() {
   return (
@@ -50,6 +49,8 @@ const fetchMemories = async () => {
     console.log(error);
   }
 };
+
+
 function App() {
   const [active, setActive] = useState(false);
   const currentImg = useRef(0);

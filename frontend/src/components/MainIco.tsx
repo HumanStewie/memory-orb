@@ -9,6 +9,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import MemoryName from "./MemoryName";
 import MemoryInfo from "./MemoryInfo";
+import { GoogleGenAI } from "@google/genai";
+
+
 
 interface IcoProps {
   currentImg: React.RefObject<number>;
@@ -26,10 +29,30 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
   const mat2Ref = useRef<THREE.ShaderMaterial>(null);
   const [name, setName] = useState(null!);
   const [date, setDate] = useState(null!);
+  const [genInfo, setGenInfo] = useState<string>(null!);
   const { camera } = useThree();
   const tl = gsap.timeline();
+  const ai = new GoogleGenAI({apiKey: import.meta.env.VITE_GEMINI_API_KEY});
+  const GenAI = async (index : number) => {
+    setGenInfo("Thinking")
+    try{
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-lite',
+        contents:
+        `
+        Memory Name: "${nameRef.current[index]}",
+        Memory Description: "${infoRef.current[index]}",
+        Date: "${dateRef.current[index]}",
+        This is for my "Memory Cube" webapp, where user can upload a memory with name, description and a date. From these information, please generate a 10 to 30 words motivational sentence relating to that memory, similar to the small yellow text on Minecraft splash texts on the title screen, also take inspiration from ending quotes of Cowboy bebop, stuff like: "See you space cowboy..." or "Youre gonna carry that weight", be a bit realistic but also a bit romantic in the language. Furthermore, you could take inspirations from other popular media like Death stranding with its message of "keep on keeping on" and Cyberpunk 2077 "Never stop fighting". Additionally, no quotation marks!.
+        `,
+      });
+      setGenInfo(response.text)
+    } catch(error) {
+      console.error(error)
+      setGenInfo("Such heavy thoughts... You're gonna carry that weight. Live on my friend!")
+    }
+  };
   useEffect(() => {
-    
     if (nameRef.current && nameRef.current.length > 0) setName(nameRef.current[0]);
     if (dateRef.current && dateRef.current.length > 0) {
       dateRef.current[0] = dateRef.current[0].split("T")[0].split("-").reverse().join("/")
@@ -38,9 +61,13 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
     if (texRef.current.length > 0) {
       uniform1.uTexture.value = texRef.current[0];
     }
-  }, [nameRef, dateRef, infoRef, texRef]);
-  const setDetails = () => {
     
+  }, [nameRef, dateRef, infoRef, texRef]);
+  useEffect(() => {
+    GenAI(currentImg.current)
+  }, [])
+  const setDetails = () => {
+    GenAI(currentImg.current)
     if (nameRef.current) setName(nameRef.current[currentImg.current]);
     if (dateRef.current) {
       dateRef.current[currentImg.current] = dateRef.current[currentImg.current].split("T")[0].split("-").reverse().join("/");
@@ -208,6 +235,11 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
           count={`${currentImg.current + 1}`}
           length={`${texRef.current.length}`}
         />
+        <div className="ai-box">
+          <h3>for the struggler:</h3>
+          <p className={genInfo === "Thinking" ? "loading-dots" : ""}>{genInfo}</p>
+        </div>
+
       </Html>
       <Html position={[0, -9, 0]} rotation={[0, 0, 10]}>
         <div
@@ -251,7 +283,6 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
               duration: 0.5,
             });
           }
-          console.log("gobv");
         }}
         onPointerLeave={() => {
           if (mat1Ref.current) {

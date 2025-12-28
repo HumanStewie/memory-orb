@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import verifyToken from "../utils/authToken";
 
 interface Props{
   idRef: React.RefObject<null>;
@@ -57,19 +58,13 @@ export default function Login({idRef, currentImg} : Props) {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/delete_memory/${
-          idRef.current[currentImg.current]
-        }`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
+      const response = await verifyToken(`http://127.0.0.1:8000/delete_memory/${
+          idRef.current && idRef.current[currentImg.current]
+        }`, {method: "DELETE"})
+
+      if (response){
+        window.location.reload();
       }
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }
