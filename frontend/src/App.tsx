@@ -13,24 +13,28 @@ import {
 import { BlendFunction } from "postprocessing";
 import MainIco from "./components/MainIco";
 import Login from "./components/Login";
+import LoadingScreen from "./components/LoadingScreen";
+import TitleCard from "./components/TitleCard";
+import { Howl, Howler } from "howler";
 
 function PostProcess() {
   return (
     <>
       <EffectComposer enableNormalPass={false}>
-        <ChromaticAberration offset={[0.001, 0.0002]} />
-        <Noise opacity={0.1} />
+        <ChromaticAberration offset={[0.003, 0.0002]} />
+        {/*<Noise opacity={0.1} />
         <Bloom
           intensity={0.5}
           luminanceThreshold={0.6}
           luminanceSmoothing={0.2}
           blendFunction={BlendFunction.SCREEN}
-        />
+        />*/}
       </EffectComposer>
     </>
   );
 }
 
+// Helper function to fetch every data
 const fetchMemories = async () => {
   const token = localStorage.getItem("token");
   try {
@@ -40,6 +44,8 @@ const fetchMemories = async () => {
     });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
+    } else if (response.status == 403) {
+      localStorage.removeItem("token");
     }
     const memoryDetails = await response.json();
     if (memoryDetails != null) {
@@ -50,9 +56,10 @@ const fetchMemories = async () => {
   }
 };
 
-
 function App() {
+  // All our states and references to store data
   const [active, setActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const currentImg = useRef(0);
   const nameRef = useRef(null);
   const infoRef = useRef(null);
@@ -61,16 +68,34 @@ function App() {
   const texRef = useRef<THREE.Texture[]>([]);
   const imgRef = useRef(null);
   const loader = new THREE.TextureLoader();
+  const bgmRef = useRef<Howl>(null);
+
+  // We load up all our informations into our refs as a list
   useEffect(() => {
     const loadRefs = async () => {
       const memoryDetails = await fetchMemories();
-      setActive(true)
+      setActive(true);
+      if (memoryDetails) {
+        setIsLoading(false);
+      }
+      if (!bgmRef.current) {
+        bgmRef.current = new Howl({
+          src: [
+            "/Alex Bainter - Remembering (Excerpts) - 01 Remembering (Short Excerpt).mp3",
+          ],
+          autoplay: true,
+          loop: true,
+          volume: 0.3,
+        });
+      }
+      bgmRef.current.play();
+      // Mapping all data gotten from database into a ref
       imgRef.current = memoryDetails.map((memos: any) => {
         return memos.memory_img_url;
-      })
+      });
       const textures = memoryDetails.map((memos: any) => {
         const t = loader.load(memos.memory_img_url);
-        t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
+        t.wrapS = t.wrapT = THREE.RepeatWrapping;
         return t;
       });
       texRef.current = textures;
@@ -87,30 +112,38 @@ function App() {
       idRef.current = memoryDetails.map((memos: any) => {
         return memos.id;
       });
+      return () => {
+        if (bgmRef.current) {
+          bgmRef.current.pause();
+          bgmRef.current.currentTime = 0;
+        }
+      };
     };
     loadRefs();
   }, []);
   return (
     <>
+      <Login idRef={idRef} currentImg={currentImg} />
+      {isLoading ? <LoadingScreen /> : <TitleCard />}
       <div id="canvas-container">
         <Canvas
           scene={{ background: new THREE.Color("#101010") }}
-          camera={{ position: [0, 0, 2] }}
+          camera={{ position: [0, 0, 2.1] }}
         >
-          {active && <MainIco
-            nameRef={nameRef}
-            dateRef={dateRef}
-            infoRef={infoRef}
-            idRef={idRef}
-            texRef={texRef}
-            currentImg={currentImg}
-            imgRef={imgRef}
-          />}
+          {active && (
+            <MainIco
+              nameRef={nameRef}
+              dateRef={dateRef}
+              infoRef={infoRef}
+              idRef={idRef}
+              texRef={texRef}
+              currentImg={currentImg}
+              imgRef={imgRef}
+            />
+          )}
           {/*<PostProcess />*/}
-          
         </Canvas>
       </div>
-      <Login idRef={idRef} currentImg={currentImg}/>
     </>
   );
 }

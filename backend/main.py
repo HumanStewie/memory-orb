@@ -63,17 +63,19 @@ def get_session():
 # Get current user
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session : Session = Depends(get_session)):
     try:
-        user = jwt.decode(token, secret_key, algorithms=[algorithm])
+        payload = jwt.decode(token, secret_key, algorithms=[algorithm])
     except InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
-    check = session.exec(select(Users).where(Users.username == user.get("sub"))).first()
-    if check is not None:
-        return check
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=403, detail="Token expired!")
+    user = session.exec(select(Users).where(Users.username == payload.get("sub"))).first()
+    if user is not None:
+        return user
     else:
         raise HTTPException(status_code=401, detail="User not found.")
 
 @app.get("/users/me")
-async def read_users_me(current_user: Annotated[Users, Depends(get_current_user)]):
+async def read_users_me(current_user = Depends(get_current_user)):
     return current_user
 
 @app.post("/signup")
@@ -96,7 +98,7 @@ async def login(data : LoginData, session : Session = Depends(get_session)):
     if db_user is not None:
         result : bool = pwcontext.verify(data.password, db_user.password_hash)
         if result:
-            token = create_access_token(data={"sub": db_user.username})
+            token = create_access_token(data={"sub": db_user.username}, expire_delta=timedelta(minutes=int(expire_time)))
             return {"access_token": token, "token_type": "bearer"}
         else:
             return JSONResponse(status_code=400, content={"Status": "Invalid username or password."})

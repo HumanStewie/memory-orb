@@ -1,24 +1,47 @@
 import { useEffect, useState } from "react";
 import verifyToken from "../utils/authToken";
 
-interface Props{
+interface Props {
   idRef: React.RefObject<null>;
   currentImg: React.RefObject<number>;
 }
 
-export default function Login({idRef, currentImg} : Props) {
+export default function Login({ idRef, currentImg }: Props) {
+  // Our states
   const [login, setLogin] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [isAuth, setIsAuth] = useState(true);
+
+  // Fetching from a random route to check for expired token, in which case we log the user out.
   useEffect(() => {
     const stored_token = localStorage.getItem("token");
-    if (stored_token != null) {
+    const expired = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/users/me`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${stored_token}` },
+        });
+        if (response.ok) {
+          return;
+        } else if (response.status === 401) {
+          localStorage.removeItem("token");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    expired();
+    if (stored_token != null) { // This is where we log users out
       setLogin(true);
+    } else {
+      setLogin(false);
     }
   });
+
+  // Send username and password to the server so it can cross-verify with database
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+  
     // Get form data and turning it into FastAPI-readable JSON file
     const formData = new FormData(e.currentTarget);
     const objJson = Object.fromEntries(formData);
@@ -40,6 +63,10 @@ export default function Login({idRef, currentImg} : Props) {
       } else if (response.status == 400) {
         // Status: 400
         setIsAuth(false);
+      } else if (response.status == 403) {
+        // Token expired
+        localStorage.removeItem("token");
+        setLogin(false);
       } else {
         // Any other status code
         throw new Error(`Response status: ${response.status}`);
@@ -48,21 +75,30 @@ export default function Login({idRef, currentImg} : Props) {
       console.log(error.message);
     }
   };
+
+  // Set the state to logged out, logs user out.
   const handleLogout = async (e: any) => {
     e.preventDefault();
     localStorage.removeItem("token");
     setLogin(false);
   };
+  
+  // Sends a delete request to our server with the current memory_id to cross-verify
   const handleDelete = async (e: any) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-
     try {
-      const response = await verifyToken(`http://127.0.0.1:8000/delete_memory/${
+      const response = await verifyToken( // verifyToken() automatically sends a token for us
+        `http://127.0.0.1:8000/delete_memory/${
           idRef.current && idRef.current[currentImg.current]
-        }`, {method: "DELETE"})
-
-      if (response){
+        }`,
+        { method: "DELETE" }
+      );
+      
+      if (response) {
+        if (response.status == 403) {
+          localStorage.removeItem("token");
+          setLogin(false);
+        }
         window.location.reload();
       }
     } catch (error) {

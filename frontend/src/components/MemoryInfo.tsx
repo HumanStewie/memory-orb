@@ -1,6 +1,3 @@
-import { useState } from "react";
-import * as THREE from "three"
-
 interface Props {
   currentImg: React.RefObject<number>;
   nameRef: React.RefObject<any[]>;
@@ -25,7 +22,6 @@ export default function MemoryInfo({dateRef, infoRef, nameRef, currentImg, imgRe
         </div>
        
       </div>
-      {/*<div className={`overlayb-${x ? state : "inactive"}`}></div>*/}
     </>
   );
 }

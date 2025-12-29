@@ -10,7 +10,7 @@ import gsap from "gsap";
 import MemoryName from "./MemoryName";
 import MemoryInfo from "./MemoryInfo";
 import { GoogleGenAI } from "@google/genai";
-
+import { Howl, Howler } from "howler";
 
 
 interface IcoProps {
@@ -22,7 +22,15 @@ interface IcoProps {
   texRef: React.RefObject<THREE.Texture[]>;
 }
 
-export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef, texRef }: IcoProps) {
+export default function MainIco({
+  currentImg,
+  nameRef,
+  dateRef,
+  infoRef,
+  imgRef,
+  texRef,
+}: IcoProps) {
+  // Creating all our references where we will store textures and mesh infos
   const mesh1 = useRef<THREE.Mesh>(null);
   const mesh2 = useRef<THREE.Mesh>(null);
   const mat1Ref = useRef<THREE.ShaderMaterial>(null);
@@ -31,62 +39,81 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
   const [date, setDate] = useState(null!);
   const [genInfo, setGenInfo] = useState<string>(null!);
   const { camera } = useThree();
-  const tl = gsap.timeline();
-  const ai = new GoogleGenAI({apiKey: import.meta.env.VITE_GEMINI_API_KEY});
-  const GenAI = async (index : number) => {
-    setGenInfo("Thinking")
-    try{
+  const tl = gsap.timeline(); // Timeline for Gsap
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  // Generate a motivational speech for each memory
+  const GenAI = async (index: number) => {
+    setGenInfo("Thinking");
+    try {
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite',
-        contents:
-        `
+        model: "gemini-2.5-flash-lite",
+        contents: `
         Memory Name: "${nameRef.current[index]}",
         Memory Description: "${infoRef.current[index]}",
         Date: "${dateRef.current[index]}",
         This is for my "Memory Cube" webapp, where user can upload a memory with name, description and a date. From these information, please generate a 10 to 30 words motivational sentence relating to that memory, similar to the small yellow text on Minecraft splash texts on the title screen, also take inspiration from ending quotes of Cowboy bebop, stuff like: "See you space cowboy..." or "Youre gonna carry that weight", be a bit realistic but also a bit romantic in the language. Furthermore, you could take inspirations from other popular media like Death stranding with its message of "keep on keeping on" and Cyberpunk 2077 "Never stop fighting". Additionally, no quotation marks!.
         `,
       });
-      setGenInfo(response.text)
-    } catch(error) {
-      console.error(error)
-      setGenInfo("Such heavy thoughts... You're gonna carry that weight. Live on my friend!")
+      setGenInfo(response.text);
+    } catch (error) {
+      console.error(error);
+      setGenInfo(
+        "Such heavy thoughts... You're gonna carry that weight. Live on my friend!"
+      );
     }
   };
   useEffect(() => {
-    if (nameRef.current && nameRef.current.length > 0) setName(nameRef.current[0]);
+    // Creating initial textures gotten from our database.
+    GenAI(currentImg.current);
+    if (nameRef.current && nameRef.current.length > 0)
+      setName(nameRef.current[0]);
     if (dateRef.current && dateRef.current.length > 0) {
-      dateRef.current[0] = dateRef.current[0].split("T")[0].split("-").reverse().join("/")
+      dateRef.current[0] = dateRef.current[0]
+        .split("T")[0]
+        .split("-")
+        .reverse()
+        .join("/");
       setDate(dateRef.current[0]);
     }
     if (texRef.current.length > 0) {
       uniform1.uTexture.value = texRef.current[0];
     }
-    
   }, [nameRef, dateRef, infoRef, texRef]);
-  useEffect(() => {
-    GenAI(currentImg.current)
-  }, [])
+  // Setting main name, date and AI generated text.
   const setDetails = () => {
-    GenAI(currentImg.current)
+    GenAI(currentImg.current);
     if (nameRef.current) setName(nameRef.current[currentImg.current]);
     if (dateRef.current) {
-      dateRef.current[currentImg.current] = dateRef.current[currentImg.current].split("T")[0].split("-").reverse().join("/");
+      // Reformatting datetime to D/M/Y format for users
+      dateRef.current[currentImg.current] = dateRef.current[currentImg.current]
+        .split("T")[0]
+        .split("-")
+        .reverse()
+        .join("/");
       setDate(dateRef.current[currentImg.current]);
     }
-  
   };
+  // Rotating textures on click
   const getTexture = (direction: "next" | "last") => {
-    const listT = texRef.current;
-    if (listT.length === 0) return null;
+    const listT = texRef.current; // Get a list of textures (from our database, which are images)
+    if (listT.length === 0) return null; // Check if theres no images
     if (direction === "next") {
-      currentImg.current = (currentImg.current + 1) % listT.length;
-    } else {
+      // Move up on index, used to iterate through all our list (which all our refs are)
       currentImg.current =
-        (currentImg.current - 1 + listT.length) % listT.length;
+        currentImg.current < listT.length - 1
+          ? currentImg.current + 1
+          : currentImg.current - listT.length + 1;
+    } else {
+      // Move down on index
+      currentImg.current =
+        currentImg.current > 0
+          ? currentImg.current - 1
+          : listT.length + currentImg.current - 1;
     }
     return listT[currentImg.current];
   };
 
+  // Storing uniforms
   const uniform1 = useMemo(
     () => ({
       uTime: { type: "f", value: 0.0 },
@@ -110,6 +137,8 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
     }),
     []
   );
+
+  // Rotate icosahedron every frame
   useFrame((_state, delta) => {
     if (mat1Ref.current) {
       mat1Ref.current.uniforms.uTime.value += delta;
@@ -127,9 +156,9 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
     }
   });
 
+  // Set up Barycentric coords and get KEYBOARD inputs
   useEffect(() => {
     setupAttributes(mesh2.current?.geometry);
-    // Get input
     window.addEventListener("keydown", (e) => {
       if (!tl.isActive()) {
         if (e.key == "ArrowRight") {
@@ -142,11 +171,10 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
           });
           setTimeout(() => {
             uniform1.uTexture.value = getTexture("next")!;
-            setDetails()
-            console.log(date)
+            setDetails();
+            console.log(date);
           }, 100);
-        }
-        else if (e.key == "ArrowLeft") {
+        } else if (e.key == "ArrowLeft") {
           tl.to(camera.rotation, {
             x: 0,
             y: camera.rotation.y + Math.PI * 2,
@@ -156,19 +184,17 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
           });
           setTimeout(() => {
             uniform1.uTexture.value = getTexture("last")!;
-            setDetails()
+            setDetails();
           }, 100);
-        }
-        else if (e.key == "ArrowUp") {
+        } else if (e.key == "ArrowUp") {
           tl.to(camera.rotation, {
             x: 0,
             duration: 2,
             ease: "power4.out",
           });
-        }
-        else if (e.key == "ArrowDown") {
+        } else if (e.key == "ArrowDown") {
           tl.to(camera.rotation, {
-            x: -Math.PI/2,
+            x: -Math.PI / 2,
             duration: 2,
             ease: "power4.out",
           });
@@ -179,6 +205,7 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
 
   return (
     <>
+      {/* Creating left-right-down arrows, main memory title and AI chatbox */}
       <Html>
         <div
           className="arrow-right"
@@ -193,7 +220,7 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
               });
               setTimeout(() => {
                 uniform1.uTexture.value = getTexture("next")!;
-                setDetails()
+                setDetails();
               }, 100);
             }
           }}
@@ -211,7 +238,7 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
               });
               setTimeout(() => {
                 uniform1.uTexture.value = getTexture("last")!;
-                setDetails()
+                setDetails();
               }, 100);
             }
           }}
@@ -221,7 +248,7 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
           onClick={() => {
             if (!tl.isActive()) {
               tl.to(camera.rotation, {
-                x: -Math.PI/2,
+                x: -Math.PI / 2,
                 duration: 2,
                 ease: "power4.out",
               });
@@ -237,32 +264,41 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
         />
         <div className="ai-box">
           <h3>for the struggler:</h3>
-          <p className={genInfo === "Thinking" ? "loading-dots" : ""}>{genInfo}</p>
+          <p className={genInfo === "Thinking" ? "loading-dots" : ""}>
+            {genInfo}
+          </p>
         </div>
-
       </Html>
-      <Html position={[0, -9, 0]} rotation={[0, 0, 10]}>
+
+      {/* Creating up arrow, all the memory infos when pressing down */}
+      <Html position={[0, -9, 0]} rotation={[0, 0, 0]}>
         <div
-            className="arrow-up"
-            onClick={() => {
-              if (!tl.isActive()) {
-                tl.to(camera.rotation, {
-                  x: 0,
-                  duration: 2,
-                  ease: "power4.out",
-                });
-              }
-            }}
-          ></div>
+          className="arrow-up"
+          onClick={() => {
+            if (!tl.isActive()) {
+              tl.to(camera.rotation, {
+                x: 0,
+                duration: 2,
+                ease: "power4.out",
+              });
+            }
+          }}
+        ></div>
       </Html>
       <Html position={[0, -6, 0]} rotation={[0, 0, 10]} fullscreen>
-        
-        <MemoryInfo nameRef={nameRef} dateRef={dateRef} infoRef={infoRef} currentImg={currentImg} imgRef={imgRef}/>
+        <MemoryInfo
+          nameRef={nameRef}
+          dateRef={dateRef}
+          infoRef={infoRef}
+          currentImg={currentImg}
+          imgRef={imgRef}
+        />
       </Html>
       <mesh
         rotation={[0, 0, 0]}
         ref={mesh1}
         onPointerOver={() => {
+          // Add color to grey-scaled and increase noise
           if (mat1Ref.current) {
             gsap.to(mat1Ref.current.uniforms.uColor, {
               value: 0.0,
@@ -306,7 +342,7 @@ export default function MainIco({ currentImg, nameRef, dateRef, infoRef, imgRef,
             });
           }
         }}
-        >
+      >
         <icosahedronGeometry args={[1, 1]} />
         <shaderMaterial
           ref={mat1Ref}

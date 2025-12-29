@@ -1,7 +1,3 @@
-interface Props {
-  onClickRight: () => void;
-}
-
 export default function Arrows() {
   return (
     <>

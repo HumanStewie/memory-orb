@@ -43,7 +43,7 @@ body {
   font-style: normal;
   font-size: 4rem;
   bottom: 15.9rem;
-  right: 47rem;
+  right: 42rem;
   animation-name: fade1;
   animation-duration: 1.5s;
   -moz-user-select: none;
@@ -64,8 +64,8 @@ body {
   -webkit-text-stroke: 2px rgb(216, 216, 216);
   min-width: 100px;
   font-size: 2rem;
-  bottom: 24rem;
-  right: 44.65rem;
+  bottom: 22rem;
+  right: 39.7rem;
   animation-name: fade1;
   animation-duration: 1.5s;
 }
@@ -364,7 +364,7 @@ body {
   position: absolute;
   right: 5rem;
   top:6rem;
-  z-index: 10;
+  z-index: 11;
   padding: 0.75rem;
   background-color: #ffffff;
   color: #121212;
@@ -490,20 +490,22 @@ body {
   word-break: break-word;
   hyphens: auto;           
   -webkit-hyphens: auto;
+  
 }
 #mem-img {
-  width: 600px;  
-  height: auto;
-  object-fit: cover;
+  width: auto;  
+  object-fit:fill;
   pointer-events: auto;
   flex-shrink: 0;
+  max-height: 50vh;
+  height: auto;
 }
 
 /* Styles for GenAI */
 .ai-box {
   position: absolute;
-  bottom: -24rem;       
-  left: -50rem;         
+  bottom: -23rem;       
+  left: -45rem;         
   width: 350px;       
   max-height: 200px;  
   background: rgba(15, 15, 15, 0.8);
@@ -562,4 +564,124 @@ body {
   25% { content: "."; }
   50% { content: ".."; }
   75% { content: "..."; }
+}
+
+/* Styles for LoadingScreen */
+.loading-screen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; 
+  color: #e0e0e0;
+  font-family: 'Courier New', Courier, monospace; 
+  pointer-events: none; 
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: 1s;
+}
+.loader-circle {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  scale: 3.2;
+}
+.loader-ring-spinner {
+  position: absolute;
+  top: -2px; 
+  left: -2px;
+  width: 204px;
+  height: 204px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #ffffff; 
+  animation: spin 2s linear infinite;
+}
+.percentage-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.loading-status-text {
+  position: absolute;
+  bottom: 4rem;
+  right: 4rem;
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  scale: 1.3;
+}
+.top-left-decor {
+  position: absolute;
+  top: 4rem;
+  left: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  opacity: 0.5;
+  scale: 1.3;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Styles for TitleCard */
+.main-title {
+  position: fixed;
+  font-size: 8rem;
+  animation-name: zoom-in;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(.64,.01,.38,1);
+  transition: 0.4s;
+
+}
+.kanji-memory, .kanji-orb {
+  ruby-position: under;
+}
+ruby {
+  transition: 0.3s;
+}
+rt {
+  font-size: 2.5rem;
+  color: #888;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+}
+.fadeout {
+  opacity: 0%;
+}
+@keyframes zoom-in {
+  from {
+    scale: 70%;
+    opacity: 0%;
+  }
+  to {
+    scale: 100%;
+    opacity: 100%;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 100%;
+  }
+  to {
+    opacity: 0%;
+  }
 }

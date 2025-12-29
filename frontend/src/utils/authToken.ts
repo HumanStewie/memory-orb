@@ -1,3 +1,4 @@
+// Simple function to verify our token, used in functions where we need to fetch()
 export default async function verifyToken(url: string, options: RequestInit = {}) {
     const token = localStorage.getItem("token")
 
@@ -12,6 +13,8 @@ export default async function verifyToken(url: string, options: RequestInit = {}
         localStorage.removeItem("token")
         window.location.reload();
         return null
+    } else if (response.status === 403){
+        localStorage.removeItem("token")
     }
     if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);

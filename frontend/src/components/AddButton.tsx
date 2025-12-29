@@ -5,14 +5,13 @@ interface FormProps {
 }
 
 function AddForm({ onClick }: FormProps) {
+  // All our states
   const [active, setActive] = useState(false);
   const [isFile, setIsFile] = useState(true);
-  const [file, setFile] = useState(null!);
-  const [isMax, setIsMax] = useState(false)
-  const [isInfoMax, setIsInfoMax] = useState(false)
-  const handleFile = (e: any) => {
-    setFile(e.target.files[0]);
-  };
+  const [isMax, setIsMax] = useState(false);
+  const [isInfoMax, setIsInfoMax] = useState(false);
+
+  // Send our form data to our backend using POST
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -27,7 +26,6 @@ function AddForm({ onClick }: FormProps) {
         setActive(true);
         window.location.reload();
       } else if (response.status == 400) {
-        setIsFile(false);
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -35,14 +33,14 @@ function AddForm({ onClick }: FormProps) {
       console.log(error);
     }
   };
-  const handleMax = (type : string, num : number, max: number) => {
-    if (num == max){
-      type == "name" ? setIsMax(true) : setIsInfoMax(true)
+  // At maximum word count in input box, added a red text: "MAX WORD".
+  const handleMax = (type: string, num: number, max: number) => {
+    if (num == max) {
+      type == "name" ? setIsMax(true) : setIsInfoMax(true);
+    } else {
+      type == "name" ? setIsMax(false) : setIsInfoMax(false);
     }
-    else{
-      type == "name" ? setIsMax(false) : setIsInfoMax(false)
-    }
-  }
+  };
   return (
     <div
       className={`form-container ${
@@ -56,23 +54,33 @@ function AddForm({ onClick }: FormProps) {
         <h2 className="add-title">Add a Memory</h2>
 
         <div className="input-group">
-          <label htmlFor="memoryName">Memory Name - 30 words{isMax ? <b style={{color: "red"}}> - max word</b> : ''}</label>
+          <label htmlFor="memoryName">
+            Memory Name - 30 words
+            {isMax ? <b style={{ color: "red" }}> - max word</b> : ""}
+          </label>
           <input
             type="text"
             id="memoryName"
             name="memoryName"
             placeholder="a wonderful memory"
             maxLength={30}
-            onChange={(e) => {handleMax("name", e.target.value.length, 30)}}
+            onChange={(e) => {
+              handleMax("name", e.target.value.length, 30);
+            }}
           ></input>
         </div>
         <div className="input-group">
-          <label htmlFor="memoryName">Memory Info - 500 words{isInfoMax ? <b style={{color: "red"}}> - max word</b> : ''}</label>
+          <label htmlFor="memoryName">
+            Memory Info - 500 words
+            {isInfoMax ? <b style={{ color: "red" }}> - max word</b> : ""}
+          </label>
           <textarea
             id="memoryInfo"
             name="memoryInfo"
             maxLength={500}
-            onChange={(e) => {handleMax("info", e.target.value.length, 500)}}
+            onChange={(e) => {
+              handleMax("info", e.target.value.length, 500);
+            }}
             placeholder="must have been a wonderful memory. express it, with your beautiful heart. this too shall pass."
           ></textarea>
         </div>
@@ -82,12 +90,7 @@ function AddForm({ onClick }: FormProps) {
         </div>
         <div className="input-group">
           <label htmlFor="memoryImage">Memory Image</label>
-          <input
-            type="file"
-            id="memoryImage"
-            name="memoryImage"
-            onChange={handleFile}
-          ></input>
+          <input type="file" id="memoryImage" name="memoryImage"></input>
         </div>
         <button type="submit" className="btn-form">
           {isFile ? "Add Memory" : "Add Memory - no image found."}
