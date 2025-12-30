@@ -482,7 +482,7 @@ body {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
-  pointer-events: auto;
+  pointer-events: none;
   max-width: 80ch;      
   width: 100%;
   overflow-wrap: break-word;
@@ -580,12 +580,11 @@ body {
   z-index: 10; 
   color: #e0e0e0;
   font-family: 'Courier New', Courier, monospace; 
-  pointer-events: none; 
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  transition: 1s;
+  transition: 1.5s;
 }
 .loader-circle {
   position: relative;
@@ -598,6 +597,8 @@ body {
   align-items: center;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
   scale: 3.2;
+  transition: 0.6s;
+  pointer-events: none;
 }
 .loader-ring-spinner {
   position: absolute;
@@ -649,14 +650,22 @@ body {
   animation-name: zoom-in;
   animation-duration: 2s;
   animation-timing-function: cubic-bezier(.64,.01,.38,1);
-  transition: 0.4s;
-
+  transition: 0.6s;
+}
+.main-title:has(h1:hover) + .loader-circle{
+  scale: 3.27;
 }
 .kanji-memory, .kanji-orb {
   ruby-position: under;
 }
 ruby {
-  transition: 0.3s;
+  transition: 0.6s;
+}
+.main-title h1 { 
+  transition: 0.6s;
+}
+.main-title > h1:hover{
+  scale: 1.06;
 }
 rt {
   font-size: 2.5rem;
@@ -684,4 +693,24 @@ rt {
   to {
     opacity: 0%;
   }
+}
+.continue {
+  position:absolute;
+  bottom: 4rem;
+  opacity: 0%;
+  animation: blinking 2.5s infinite;
+  animation-delay: 2s;
+  transition: 1s;
+  font-size: x-large;
+}
+.fadein {
+  opacity: 80%;
+}
+@keyframes blinking {
+  0% {opacity: 80%;}
+  50% {opacity: 30%;}
+  100% {opacity: 80%;}
+}
+.unclick {
+  pointer-events: none;
 }

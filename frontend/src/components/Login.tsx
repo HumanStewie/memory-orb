@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import verifyToken from "../utils/authToken";
 
 interface Props {
   idRef: React.RefObject<null>;
@@ -31,7 +30,8 @@ export default function Login({ idRef, currentImg }: Props) {
       }
     };
     expired();
-    if (stored_token != null) { // This is where we log users out
+    if (stored_token != null) {
+      // This is where we log users out
       setLogin(true);
     } else {
       setLogin(false);
@@ -41,7 +41,7 @@ export default function Login({ idRef, currentImg }: Props) {
   // Send username and password to the server so it can cross-verify with database
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-  
+
     // Get form data and turning it into FastAPI-readable JSON file
     const formData = new FormData(e.currentTarget);
     const objJson = Object.fromEntries(formData);
@@ -82,18 +82,25 @@ export default function Login({ idRef, currentImg }: Props) {
     localStorage.removeItem("token");
     setLogin(false);
   };
-  
+
   // Sends a delete request to our server with the current memory_id to cross-verify
   const handleDelete = async (e: any) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
     try {
-      const response = await verifyToken( // verifyToken() automatically sends a token for us
+      const response = await fetch(
         `http://127.0.0.1:8000/delete_memory/${
           idRef.current && idRef.current[currentImg.current]
         }`,
-        { method: "DELETE" }
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json",
+          },
+        }
       );
-      
+
       if (response) {
         if (response.status == 403) {
           localStorage.removeItem("token");

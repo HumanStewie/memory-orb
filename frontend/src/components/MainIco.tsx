@@ -12,6 +12,24 @@ import MemoryInfo from "./MemoryInfo";
 import { GoogleGenAI } from "@google/genai";
 import { Howl, Howler } from "howler";
 
+const turnRight = new Howl({
+  src: ["/turn right.wav"],
+});
+const turnLeft = new Howl({
+  src: ["/turn left.wav"],
+  volume: 0.6,
+});
+let isHovering = false;
+const hover = new Howl({
+  src: ["/onhover.wav"],
+  volume: 0.0,
+  loop: true,
+  onfade: function () {
+    if (this.volume() < 0.1 && !isHovering) {
+      this.stop();
+    }
+  },
+});
 
 interface IcoProps {
   currentImg: React.RefObject<number>;
@@ -37,10 +55,10 @@ export default function MainIco({
   const mat2Ref = useRef<THREE.ShaderMaterial>(null);
   const [name, setName] = useState(null!);
   const [date, setDate] = useState(null!);
-  const [genInfo, setGenInfo] = useState<string>(null!);
+  const [genInfo, setGenInfo] = useState<string | undefined>(null!);
   const { camera } = useThree();
   const tl = gsap.timeline(); // Timeline for Gsap
-  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  //const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   // Generate a motivational speech for each memory
   const GenAI = async (index: number) => {
     setGenInfo("Thinking");
@@ -149,10 +167,12 @@ export default function MainIco({
     if (mesh1.current) {
       mesh1.current.rotation.x += delta / 10;
       mesh1.current.rotation.y += delta / 10;
+      mesh1.current.rotation.z += delta / 10;
     }
     if (mesh2.current) {
       mesh2.current.rotation.x += delta / 10;
       mesh2.current.rotation.y += delta / 10;
+      mesh2.current.rotation.z += delta / 10;
     }
   });
 
@@ -167,36 +187,41 @@ export default function MainIco({
             y: camera.rotation.y - Math.PI * 2,
             z: 0,
             duration: 2,
-            ease: "power4.out",
+            ease: "power3.out",
           });
           setTimeout(() => {
             uniform1.uTexture.value = getTexture("next")!;
             setDetails();
             console.log(date);
-          }, 100);
+          }, 150);
+          turnRight.volume(0.0);
+          turnRight.play();
+          turnRight.fade(1, 0, 1000);
         } else if (e.key == "ArrowLeft") {
+          turnLeft.play();
+          turnLeft.fade(1, 0, 1000);
           tl.to(camera.rotation, {
             x: 0,
             y: camera.rotation.y + Math.PI * 2,
             z: 0,
             duration: 2,
-            ease: "power4.out",
+            ease: "power3.out",
           });
           setTimeout(() => {
             uniform1.uTexture.value = getTexture("last")!;
             setDetails();
-          }, 100);
+          }, 150);
         } else if (e.key == "ArrowUp") {
           tl.to(camera.rotation, {
             x: 0,
             duration: 2,
-            ease: "power4.out",
+            ease: "power3.out",
           });
         } else if (e.key == "ArrowDown") {
           tl.to(camera.rotation, {
             x: -Math.PI / 2,
             duration: 2,
-            ease: "power4.out",
+            ease: "power3.out",
           });
         }
       }
@@ -209,48 +234,86 @@ export default function MainIco({
       <Html>
         <div
           className="arrow-right"
+          onMouseEnter={() => {
+            isHovering = true;
+            if (!hover.playing()) {
+              hover.play();
+            }
+            hover.fade(hover.volume(), 0.5, 1000);
+          }}
+          onMouseLeave={() => {
+            isHovering = false;
+            hover.fade(hover.volume(), 0, 1000);
+          }}
           onClick={() => {
             if (!tl.isActive()) {
+              turnRight.play();
+              turnRight.fade(1, 0, 1000);
               tl.to(camera.rotation, {
                 x: 0,
                 y: camera.rotation.y - Math.PI * 2,
                 z: 0,
                 duration: 2,
-                ease: "power4.out",
+                ease: "power3.out",
               });
+
               setTimeout(() => {
                 uniform1.uTexture.value = getTexture("next")!;
                 setDetails();
-              }, 100);
+              }, 150);
             }
           }}
         ></div>
         <div
           className="arrow-left"
+          onMouseEnter={() => {
+            isHovering = true;
+            if (!hover.playing()) {
+              hover.play();
+            }
+            hover.fade(hover.volume(), 0.5, 1000);
+          }}
+          onMouseLeave={() => {
+            isHovering = false;
+            hover.fade(hover.volume(), 0, 1000);
+          }}
           onClick={() => {
             if (!tl.isActive()) {
+              turnLeft.play();
+              turnLeft.fade(1, 0, 1000);
               tl.to(camera.rotation, {
                 x: 0,
                 y: camera.rotation.y + Math.PI * 2,
                 z: 0,
                 duration: 2,
-                ease: "power4.out",
+                ease: "power3.out",
               });
               setTimeout(() => {
                 uniform1.uTexture.value = getTexture("last")!;
                 setDetails();
-              }, 100);
+              }, 150);
             }
           }}
         ></div>
         <div
           className="arrow-down"
+          onMouseEnter={() => {
+            isHovering = true;
+            if (!hover.playing()) {
+              hover.play();
+            }
+            hover.fade(hover.volume(), 0.5, 1000);
+          }}
+          onMouseLeave={() => {
+            isHovering = false;
+            hover.fade(hover.volume(), 0, 1000);
+          }}
           onClick={() => {
             if (!tl.isActive()) {
               tl.to(camera.rotation, {
                 x: -Math.PI / 2,
                 duration: 2,
-                ease: "power4.out",
+                ease: "power3.out",
               });
             }
           }}
@@ -271,9 +334,20 @@ export default function MainIco({
       </Html>
 
       {/* Creating up arrow, all the memory infos when pressing down */}
-      <Html position={[0, -9, 0]} rotation={[0, 0, 0]}>
+      <Html position={[0, -9, 0]} rotation={[0, 0, 0]} zIndexRange={[100, 0]}>
         <div
           className="arrow-up"
+          onMouseEnter={() => {
+            isHovering = true;
+            if (!hover.playing()) {
+              hover.play();
+            }
+            hover.fade(hover.volume(), 0.5, 1000);
+          }}
+          onMouseLeave={() => {
+            isHovering = false;
+            hover.fade(hover.volume(), 0, 1000);
+          }}
           onClick={() => {
             if (!tl.isActive()) {
               tl.to(camera.rotation, {
@@ -285,7 +359,12 @@ export default function MainIco({
           }}
         ></div>
       </Html>
-      <Html position={[0, -6, 0]} rotation={[0, 0, 10]} fullscreen>
+      <Html
+        position={[0, -6, 0]}
+        rotation={[0, 0, 0]}
+        zIndexRange={[10, 0]}
+        fullscreen
+      >
         <MemoryInfo
           nameRef={nameRef}
           dateRef={dateRef}
@@ -319,6 +398,8 @@ export default function MainIco({
               duration: 0.5,
             });
           }
+          hover.play();
+          hover.fade(hover.volume(), 0.5, 1000);
         }}
         onPointerLeave={() => {
           if (mat1Ref.current) {
@@ -340,6 +421,7 @@ export default function MainIco({
               value: 0.0,
               duration: 0.5,
             });
+            hover.fade(hover.volume(), 0, 1000);
           }
         }}
       >

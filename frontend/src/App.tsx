@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/immutability */
-import React from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
@@ -10,12 +9,12 @@ import {
   EffectComposer,
   Noise,
 } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
 import MainIco from "./components/MainIco";
 import Login from "./components/Login";
 import LoadingScreen from "./components/LoadingScreen";
 import TitleCard from "./components/TitleCard";
-import { Howl, Howler } from "howler";
+import { Stars } from "@react-three/drei";
+import StarSystem from "./components/Stars";
 
 function PostProcess() {
   return (
@@ -68,7 +67,6 @@ function App() {
   const texRef = useRef<THREE.Texture[]>([]);
   const imgRef = useRef(null);
   const loader = new THREE.TextureLoader();
-  const bgmRef = useRef<Howl>(null);
 
   // We load up all our informations into our refs as a list
   useEffect(() => {
@@ -78,17 +76,7 @@ function App() {
       if (memoryDetails) {
         setIsLoading(false);
       }
-      if (!bgmRef.current) {
-        bgmRef.current = new Howl({
-          src: [
-            "/Alex Bainter - Remembering (Excerpts) - 01 Remembering (Short Excerpt).mp3",
-          ],
-          autoplay: true,
-          loop: true,
-          volume: 0.3,
-        });
-      }
-      bgmRef.current.play();
+
       // Mapping all data gotten from database into a ref
       imgRef.current = memoryDetails.map((memos: any) => {
         return memos.memory_img_url;
@@ -112,12 +100,6 @@ function App() {
       idRef.current = memoryDetails.map((memos: any) => {
         return memos.id;
       });
-      return () => {
-        if (bgmRef.current) {
-          bgmRef.current.pause();
-          bgmRef.current.currentTime = 0;
-        }
-      };
     };
     loadRefs();
   }, []);
@@ -127,7 +109,7 @@ function App() {
       {isLoading ? <LoadingScreen /> : <TitleCard />}
       <div id="canvas-container">
         <Canvas
-          scene={{ background: new THREE.Color("#101010") }}
+          scene={{ background: new THREE.Color("#080808") }}
           camera={{ position: [0, 0, 2.1] }}
         >
           {active && (
@@ -141,6 +123,7 @@ function App() {
               imgRef={imgRef}
             />
           )}
+          <StarSystem />
           {/*<PostProcess />*/}
         </Canvas>
       </div>
