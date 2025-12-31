@@ -6,7 +6,7 @@
 <i>記憶のオーブ, a beautiful showcase of nostalgia. </i>
 </p>
 
-<p align="center"><b>Memory Orb is a simple, yet mesmerizing, memory showcase for you to store precious moments in our fleeting life</b></p>
+<p align="center"><b>Memory Orb is a simple, yet mesmerizing, memory showcase for you to store precious moments in our fleeting life.</b></p>
 
 ## Inspiration
 
@@ -18,10 +18,15 @@ A quote in Spiritfarer really stuck with me when I played through it:
 
 You have only truly lived, when the thoughts left behind for the living, are memories of you. I find it poetic that everything will truly wither and die out, even memories, yet we still try so desperately to cling onto them. Ironic, considering I am also desperately clinging onto my memories. But perhaps that is good, because a memory worth clinging onto, is a memory that deserves to be eternalize.
 
-Thus, I decided to create Memory Orb (or 記憶のオーブ), a beautiful showcase of nostalgia, and a way tell the story of your life, accompanied with mesmerizing visuals.
+Thus, I decided to create **Memory Orb (or 記憶のオーブ)**, a beautiful showcase of *nostalgia*, and a way tell the story of your life, accompanied with mesmerizing visuals.
+
+## What does it do?
+In the simplest terms, users can upload images of any moment in their life and attach a story alongside it, so speak your mind, be free and appreciate every moment of your life.
+
+With a bit more details, users can sign up or log in, then the server will fetch the data related to that user and display it on the cube.
 
 ## Installation
-If you just want to use the website, you could just access [Memory Orb - 記憶のオーブ](...), make an account and use it normally. However, if you want to run locally for your own uses, here's what to do.
+If you just want to use the website, you could just access [**Memory Orb - 記憶のオーブ**](...), make an account and use it normally. However, if you want to run locally for your own uses, here's what to do.
 
 Before installing, make sure you have a database set up like this with the exact column names:
 
@@ -37,11 +42,11 @@ Before installing, make sure you have a database set up like this with the exact
 -----------------------------------------------------------------------------------------
 ```
 
-Additionally, you need to set up a [cloudinary](https://cloudinary.com/) storage for our storage API. You would also need a Google API key, if you dont want to use AI tho, comment out line 65 in `MainIco.tsx`
+Additionally, you need to set up a [**cloudinary**](https://cloudinary.com/) storage for our storage API. You would also need a Google API key, if you dont want to use AI tho, comment out line 65 in `MainIco.tsx`
 
 Now get all your environment variables and store it in `.env` in folders with `.env.public`, copy the variable name exactly as shown in `.env.public`. You can generate a SECRET_KEY with `openssl rand -hex 32` on Linux.
 
-I recommend installing [docker](https://www.docker.com/get-started/) and running `docker compose` so you won't need to be setting up the environments, installing the packages and be able to avoid any OS-related issues.
+I recommend installing [**docker**](https://www.docker.com/get-started/) and running `docker compose` so you won't need to be setting up the environments, installing the packages and be able to avoid any OS-related issues:
 
 ```bash
 git clone ...
@@ -49,7 +54,7 @@ cd memory-orb
 docker compose up [--build] # Run with --build if its the first time.
 ```
 
-Alternatively, you could build everything from scratch
+Alternatively, you could build everything from scratch:
 
 ```bash
 # Clone repo
