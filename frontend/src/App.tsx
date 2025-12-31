@@ -1,37 +1,38 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/immutability */
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import {
   Bloom,
+  BrightnessContrast,
   ChromaticAberration,
   EffectComposer,
-  Noise,
 } from "@react-three/postprocessing";
 import MainIco from "./components/MainIco";
 import Login from "./components/Login";
 import LoadingScreen from "./components/LoadingScreen";
 import TitleCard from "./components/TitleCard";
-import { Stars } from "@react-three/drei";
 import StarSystem from "./components/Stars";
+import { CameraControls, OrbitControls } from "@react-three/drei";
 
 function PostProcess() {
+  
   return (
     <>
-      <EffectComposer enableNormalPass={false}>
-        <ChromaticAberration offset={[0.003, 0.0002]} />
-        {/*<Noise opacity={0.1} />
-        <Bloom
-          intensity={0.5}
-          luminanceThreshold={0.6}
-          luminanceSmoothing={0.2}
-          blendFunction={BlendFunction.SCREEN}
-        />*/}
+      <EffectComposer>
+        <ChromaticAberration offset={[0.001, 0.0002]} />
+        <BrightnessContrast
+          brightness={-0.1} // brightness. min: -1, max: 1
+          contrast={0.4} // contrast: min -1, max: 1
+        />
       </EffectComposer>
     </>
   );
 }
+
+
+
 
 // Helper function to fetch every data
 const fetchMemories = async () => {
@@ -124,7 +125,7 @@ function App() {
             />
           )}
           <StarSystem />
-          {/*<PostProcess />*/}
+          <PostProcess />
         </Canvas>
       </div>
     </>

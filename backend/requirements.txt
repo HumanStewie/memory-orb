@@ -1,8 +1,8 @@
-pyjwt
-fastapi[standard]
-passlib[argon2]
-cloudinary
-passlib[bcrypt]
-sqlmodel
-psycopg2
-python-dotenv
+pyjwt==2.10.1
+fastapi[standard]==0.124.4
+passlib[argon2]==1.7.4
+cloudinary==1.44.1
+passlib[bcrypt]==1.7.4 # Not really sure if this is even needed rn
+sqlmodel==0.0.27
+psycopg2==2.9.11
+python-dotenv==1.2.1

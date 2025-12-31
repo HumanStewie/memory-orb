@@ -20,7 +20,7 @@ export default function TitleCard() {
       onClick={() => {
         setFadeOut("fadeout");
         setUnclick("unclick");
-        bgm.seek(5);
+        bgm.seek(2);
         bgm.play();
       }}
       className={"loading-screen-container " + fadeOut + ` ${unclick}`}
@@ -38,9 +38,8 @@ export default function TitleCard() {
             </ruby>
             <rt>Memory</rt>の
             <ruby className="kanji-orb">
-              玉<rt>たま</rt>
-            </ruby>
-            <rt> Orb</rt>
+              オーブ
+            </ruby><rt>Orb</rt>
           </ruby>
         </h1>
       </div>

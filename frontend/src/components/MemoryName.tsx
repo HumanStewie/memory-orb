@@ -8,10 +8,12 @@ interface Props {
 function MemoryName({ name, date, count, length }: Props) {
   return (
     <>
-      <h1 id="mem-total">
-        {count} / {length}
-      </h1>
-      <h1 id="mem-count">{count}.</h1>
+      <div className="counter">
+        <h1 id="mem-total">
+          {count} / {length}
+        </h1>
+        <h1 id="mem-count">{count}.</h1>
+      </div>
       <div className="memory-title">
         <h1 id="main-name">{name}</h1>
         <h1 id="secondary-name">{date}</h1>

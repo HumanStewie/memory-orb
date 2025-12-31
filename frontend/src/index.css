@@ -35,15 +35,18 @@ body {
   left: -40vw;
   text-transform: uppercase;
 }
-#mem-count {
+.counter{
   position: absolute;
+  top: -45vh;
+  right: 40vw;
+}
+#mem-count {
+  position: relative;
   color: rgb(216, 216, 216);
   font-family: "Archivo Black", sans-serif;
   font-weight: bolder;
   font-style: normal;
   font-size: 4rem;
-  bottom: 15.9rem;
-  right: 42rem;
   animation-name: fade1;
   animation-duration: 1.5s;
   -moz-user-select: none;
@@ -64,8 +67,7 @@ body {
   -webkit-text-stroke: 2px rgb(216, 216, 216);
   min-width: 100px;
   font-size: 2rem;
-  bottom: 22rem;
-  right: 39.7rem;
+  margin-top: 1px;
   animation-name: fade1;
   animation-duration: 1.5s;
 }
@@ -428,7 +430,7 @@ body {
 }
 .arrow-down {
   transform: rotate(-135deg) scale(2);
-  margin-top: 20vw;
+  margin-top: 22.5vw;
 }
 .arrow-up {
   transform: rotate(45deg) scale(2);
@@ -646,7 +648,7 @@ body {
 /* Styles for TitleCard */
 .main-title {
   position: fixed;
-  font-size: 8rem;
+  font-size: 6.5rem;
   animation-name: zoom-in;
   animation-duration: 2s;
   animation-timing-function: cubic-bezier(.64,.01,.38,1);
@@ -672,6 +674,9 @@ rt {
   color: #888;
   margin-top: -1rem;
   margin-bottom: 1rem;
+}
+.orb{
+  padding-left: 1rem;
 }
 .fadeout {
   opacity: 0%;

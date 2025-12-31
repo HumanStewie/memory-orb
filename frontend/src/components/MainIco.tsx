@@ -19,6 +19,10 @@ const turnLeft = new Howl({
   src: ["/turn left.wav"],
   volume: 0.6,
 });
+const turnDown = new Howl({
+  src: ["/turn down.wav"],
+  volume: 0.6,
+});
 let isHovering = false;
 const hover = new Howl({
   src: ["/onhover.wav"],
@@ -143,14 +147,14 @@ export default function MainIco({
         value: new THREE.Texture(),
       },
       uColor: { value: 1.0 },
-      uSpeed: { value: 0.0 },
+      uSpeed: { value: 0.3 },
     }),
     []
   );
   const uniform2 = useMemo(
     () => ({
       uTime: { type: "f", value: 0.0 },
-      uSpeed: { value: 0.0 },
+      uSpeed: { value: 0.3 },
       uColor: { value: 1.3 },
     }),
     []
@@ -212,12 +216,16 @@ export default function MainIco({
             setDetails();
           }, 150);
         } else if (e.key == "ArrowUp") {
+          turnDown.play();
+          turnDown.fade(1, 0, 1000);
           tl.to(camera.rotation, {
             x: 0,
             duration: 2,
             ease: "power3.out",
           });
         } else if (e.key == "ArrowDown") {
+          turnDown.play();
+          turnDown.fade(1, 0, 1000);
           tl.to(camera.rotation, {
             x: -Math.PI / 2,
             duration: 2,
@@ -231,7 +239,7 @@ export default function MainIco({
   return (
     <>
       {/* Creating left-right-down arrows, main memory title and AI chatbox */}
-      <Html>
+      <Html occlude="blending">
         <div
           className="arrow-right"
           onMouseEnter={() => {
@@ -239,7 +247,7 @@ export default function MainIco({
             if (!hover.playing()) {
               hover.play();
             }
-            hover.fade(hover.volume(), 0.5, 1000);
+            hover.fade(hover.volume(), 0.2, 1000);
           }}
           onMouseLeave={() => {
             isHovering = false;
@@ -271,7 +279,7 @@ export default function MainIco({
             if (!hover.playing()) {
               hover.play();
             }
-            hover.fade(hover.volume(), 0.5, 1000);
+            hover.fade(hover.volume(), 0.2, 1000);
           }}
           onMouseLeave={() => {
             isHovering = false;
@@ -302,7 +310,7 @@ export default function MainIco({
             if (!hover.playing()) {
               hover.play();
             }
-            hover.fade(hover.volume(), 0.5, 1000);
+            hover.fade(hover.volume(), 0.2, 1000);
           }}
           onMouseLeave={() => {
             isHovering = false;
@@ -310,6 +318,8 @@ export default function MainIco({
           }}
           onClick={() => {
             if (!tl.isActive()) {
+              turnDown.play();
+              turnDown.fade(1, 0, 1000);
               tl.to(camera.rotation, {
                 x: -Math.PI / 2,
                 duration: 2,
@@ -342,7 +352,7 @@ export default function MainIco({
             if (!hover.playing()) {
               hover.play();
             }
-            hover.fade(hover.volume(), 0.5, 1000);
+            hover.fade(hover.volume(), 0.2, 1000);
           }}
           onMouseLeave={() => {
             isHovering = false;
@@ -350,6 +360,8 @@ export default function MainIco({
           }}
           onClick={() => {
             if (!tl.isActive()) {
+              turnDown.play();
+              turnDown.fade(1, 0, 1000);
               tl.to(camera.rotation, {
                 x: 0,
                 duration: 2,
@@ -377,7 +389,7 @@ export default function MainIco({
         rotation={[0, 0, 0]}
         ref={mesh1}
         onPointerOver={() => {
-          // Add color to grey-scaled and increase noise
+          // Add color to grey-scaled (uColor) and increase noise (uSpeed)
           if (mat1Ref.current) {
             gsap.to(mat1Ref.current.uniforms.uColor, {
               value: 0.0,
@@ -399,7 +411,7 @@ export default function MainIco({
             });
           }
           hover.play();
-          hover.fade(hover.volume(), 0.5, 1000);
+          hover.fade(hover.volume(), 0.2, 1000);
         }}
         onPointerLeave={() => {
           if (mat1Ref.current) {
@@ -408,7 +420,7 @@ export default function MainIco({
               duration: 0.5,
             });
             gsap.to(mat1Ref.current.uniforms.uSpeed, {
-              value: 0.0,
+              value: 0.3,
               duration: 0.5,
             });
           }
@@ -418,10 +430,21 @@ export default function MainIco({
               duration: 0.5,
             });
             gsap.to(mat2Ref.current.uniforms.uSpeed, {
-              value: 0.0,
+              value: 0.3,
               duration: 0.5,
             });
             hover.fade(hover.volume(), 0, 1000);
+          }
+        }}
+        onClick={() => {
+          if (!tl.isActive()) {
+            turnDown.play();
+            turnDown.fade(1, 0, 1000);
+            tl.to(camera.rotation, {
+              x: -Math.PI / 2,
+              duration: 2,
+              ease: "power3.out",
+            });
           }
         }}
       >
