@@ -16,7 +16,7 @@ export default function Login({ idRef, currentImg }: Props) {
     const stored_token = localStorage.getItem("token");
     const expired = async () => {
       try {
-        const response = await fetch(`https://memory-orb-backend.vercel.app/users/me`, {
+        const response = await fetch(`${import.meta.env.BACKEND_URL}/users/me`, {
           method: "GET",
           headers: { Authorization: `Bearer ${stored_token}` },
         });
@@ -47,7 +47,7 @@ export default function Login({ idRef, currentImg }: Props) {
     const objJson = Object.fromEntries(formData);
     try {
       const response = await fetch(
-        `https://memory-orb-backend.vercel.app/${isSignup ? "signup" : "login"}`,
+        `${import.meta.env.BACKEND_URL}/${isSignup ? "signup" : "login"}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -89,7 +89,7 @@ export default function Login({ idRef, currentImg }: Props) {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://memory-orb-backend.vercel.app/delete_memory/${
+        `${import.meta.env.BACKEND_URL}/delete_memory/${
           idRef.current && idRef.current[currentImg.current]
         }`,
         {

@@ -15,7 +15,6 @@ import TitleCard from "./components/TitleCard";
 import StarSystem from "./components/Stars";
 
 function PostProcess() {
-  
   return (
     <>
       <EffectComposer>
@@ -29,14 +28,11 @@ function PostProcess() {
   );
 }
 
-
-
-
 // Helper function to fetch every data
 const fetchMemories = async () => {
   const token = localStorage.getItem("token");
   try {
-    const response = await fetch(`https://memory-orb-backend.vercel.app/get_memory`, {
+    const response = await fetch(`${import.meta.env.BACKEND_URL}/get_memory`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
