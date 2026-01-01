@@ -78,6 +78,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], sessio
 async def read_users_me(current_user = Depends(get_current_user)):
     return current_user
 
+@app.get("/")
+async def show():
+    return "Hello"
+
 @app.post("/signup")
 async def signup(data : LoginData, session : Session = Depends(get_session)):
     user = session.exec(select(Users).where(Users.username == data.username)).first()

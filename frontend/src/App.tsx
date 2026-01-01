@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/immutability */
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import {
-  Bloom,
   BrightnessContrast,
   ChromaticAberration,
   EffectComposer,
@@ -14,7 +13,6 @@ import Login from "./components/Login";
 import LoadingScreen from "./components/LoadingScreen";
 import TitleCard from "./components/TitleCard";
 import StarSystem from "./components/Stars";
-import { CameraControls, OrbitControls } from "@react-three/drei";
 
 function PostProcess() {
   

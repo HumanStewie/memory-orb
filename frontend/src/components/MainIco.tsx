@@ -62,7 +62,7 @@ export default function MainIco({
   const [genInfo, setGenInfo] = useState<string | undefined>(null!);
   const { camera } = useThree();
   const tl = gsap.timeline(); // Timeline for Gsap
-  //const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   // Generate a motivational speech for each memory
   const GenAI = async (index: number) => {
     setGenInfo("Thinking");
