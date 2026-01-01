@@ -94,7 +94,7 @@ function AddForm({}: FormProps) {
         </div>
         <div className="input-group">
           <label htmlFor="memoryImage">Memory Image</label>
-          <input type="file" id="memoryImage" name="memoryImage"></input>
+          <input type="file" id="memoryImage" name="memoryImage" required></input>
         </div>
         <button type="submit" className={`btn-form ${isSubmitting ? "loading-dots" : ""}`}>
           {isSubmitting ? "Adding Memory" : "Add Memory"}
