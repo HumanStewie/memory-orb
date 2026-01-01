@@ -60,7 +60,7 @@ function AddForm({}: FormProps) {
         <div className="input-group">
           <label htmlFor="memoryName">
             Memory Name - 30 words
-            {isMax ? <b style={{ color: "red" }}> - max word</b> : ""}
+            {isMax ? <b style={{ color: "red" }}> - max character</b> : ""}
           </label>
           <input
             type="text"
@@ -68,6 +68,7 @@ function AddForm({}: FormProps) {
             name="memoryName"
             placeholder="a wonderful memory"
             maxLength={30}
+            required
             onChange={(e) => {
               handleMax("name", e.target.value.length, 30);
             }}
@@ -76,7 +77,7 @@ function AddForm({}: FormProps) {
         <div className="input-group">
           <label htmlFor="memoryName">
             Memory Story - 500 words
-            {isInfoMax ? <b style={{ color: "red" }}> - max word</b> : ""}
+            {isInfoMax ? <b style={{ color: "red" }}> - max character</b> : ""}
           </label>
           <textarea
             id="memoryInfo"
@@ -85,12 +86,13 @@ function AddForm({}: FormProps) {
             onChange={(e) => {
               handleMax("info", e.target.value.length, 500);
             }}
+            required
             placeholder="must have been a wonderful memory. express it, with your beautiful heart. this too shall pass."
           ></textarea>
         </div>
         <div className="input-group">
           <label htmlFor="date">Date</label>
-          <input type="date" id="date" name="date"></input>
+          <input type="date" id="date" name="date" required></input>
         </div>
         <div className="input-group">
           <label htmlFor="memoryImage">Memory Image</label>
