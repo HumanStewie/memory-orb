@@ -129,6 +129,5 @@ npx vite
 
 ## Known issues
 1. CSS: They do not work for different resolutions or anything other than desktops as far as I know.
-2. Login, submit, delete buttons does not have indicators showing they are fetching data.
+2. Login, submit, delete buttons does not have indicators showing they are fetching data. (Fixed ✅)
 3. The buzzing sound on hover gets progressively louder if the user hover over and over again.
-
