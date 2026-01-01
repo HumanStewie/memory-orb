@@ -4,5 +4,5 @@ passlib[argon2]==1.7.4
 cloudinary==1.44.1
 passlib[bcrypt]==1.7.4 # Not really sure if this is even needed rn
 sqlmodel==0.0.27
-psycopg2==2.9.11
+psycopg2-binary==2.9.11
 python-dotenv==1.2.1
