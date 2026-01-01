@@ -21,7 +21,7 @@ export default function MemoryInfo({
       .join("/");
   }
   return (
-    <>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, cumque fugiat mollitia asperiores rem magni saepe libero ipsum minus autem enim consectetur est voluptates at debitis, eum quasi molestiae aliquam?
+    <>
       <div className="modal">
         <img
           id="mem-img"
