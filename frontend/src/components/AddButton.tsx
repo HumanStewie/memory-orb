@@ -16,7 +16,7 @@ function AddForm({ }: FormProps) {
     const formData = new FormData(e.currentTarget);
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://127.0.0.1:8000/memory`, {
+      const response = await fetch(`https://memory-orb-backend.vercel.app/memory`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

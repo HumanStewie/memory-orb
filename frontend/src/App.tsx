@@ -36,7 +36,7 @@ function PostProcess() {
 const fetchMemories = async () => {
   const token = localStorage.getItem("token");
   try {
-    const response = await fetch(`http://127.0.0.1:8000/get_memory`, {
+    const response = await fetch(`https://memory-orb-backend.vercel.app/get_memory`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
