@@ -18,7 +18,7 @@ function PostProcess() {
   return (
     <>
       <EffectComposer>
-        <ChromaticAberration offset={[0.001, 0.0002]} />
+        <ChromaticAberration offset={[0.0008, 0.0002]} />
         <BrightnessContrast
           brightness={-0.1} // brightness. min: -1, max: 1
           contrast={0.4} // contrast: min -1, max: 1

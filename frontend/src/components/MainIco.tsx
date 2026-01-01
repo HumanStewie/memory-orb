@@ -29,7 +29,7 @@ const hover = new Howl({
   volume: 0.0,
   loop: true,
   onfade: function () {
-    if (hover.volume() < 0.1 && !isHovering) {
+    if (hover.volume() === 0 && !isHovering) {
       hover.stop();
     }
   },

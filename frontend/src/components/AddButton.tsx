@@ -52,9 +52,7 @@ function AddForm({}: FormProps) {
       }`}
     >
       <form
-        className={`memory-form ${active ? "memory-done" : "memory-start"} ${
-          isSubmitting ? "loading-dots" : ""
-        }`}
+        className={`memory-form ${active ? "memory-done" : "memory-start"}`}
         onSubmit={handleSubmit}
       >
         <h2 className="add-title">Add a Memory</h2>
@@ -98,7 +96,7 @@ function AddForm({}: FormProps) {
           <label htmlFor="memoryImage">Memory Image</label>
           <input type="file" id="memoryImage" name="memoryImage"></input>
         </div>
-        <button type="submit" className="btn-form">
+        <button type="submit" className={`btn-form ${isSubmitting ? "loading-dots" : ""}`}>
           {isSubmitting ? "Adding Memory" : "Add Memory"}
         </button>
       </form>

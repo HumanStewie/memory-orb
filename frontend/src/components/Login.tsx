@@ -10,7 +10,8 @@ export default function Login({ idRef, currentImg }: Props) {
   const [login, setLogin] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [isAuth, setIsAuth] = useState(true);
-
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   // Fetching from a random route to check for expired token, in which case we log the user out.
   useEffect(() => {
     const stored_token = localStorage.getItem("token");
@@ -41,7 +42,7 @@ export default function Login({ idRef, currentImg }: Props) {
   // Send username and password to the server so it can cross-verify with database
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    setIsRegistering(true);
     // Get form data and turning it into FastAPI-readable JSON file
     const formData = new FormData(e.currentTarget);
     const objJson = Object.fromEntries(formData);
@@ -86,6 +87,7 @@ export default function Login({ idRef, currentImg }: Props) {
   // Sends a delete request to our server with the current memory_id to cross-verify
   const handleDelete = async (e: any) => {
     e.preventDefault();
+    setIsDeleting(true)
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
@@ -119,7 +121,7 @@ export default function Login({ idRef, currentImg }: Props) {
         Log Out
       </button>
       <button className="delete-btn" onClick={handleDelete}>
-        Delete Memory
+        {isDeleting ? "Deleting..." : "Delete Memory"}
       </button>
       <div className={`login-overlay ${login ? "login-overlay-done" : ""}`}>
         <form
@@ -178,10 +180,10 @@ export default function Login({ idRef, currentImg }: Props) {
           <button type="submit" className="btn-login" value={"login"}>
             {isSignup
               ? isAuth
-                ? "Sign Up"
+                ? isRegistering ? "Signing Up..." : "Sign Up"
                 : "Sign up - Username taken"
               : isAuth
-              ? "Log In"
+              ? isRegistering ? "Logging In..." : "Log In"
               : "Log In - Invalid user/pw"}
           </button>
         </form>
