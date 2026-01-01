@@ -21,7 +21,7 @@ export default function MemoryInfo({
       .join("/");
   }
   return (
-    <>
+    <>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, cumque fugiat mollitia asperiores rem magni saepe libero ipsum minus autem enim consectetur est voluptates at debitis, eum quasi molestiae aliquam?
       <div className="modal">
         <img
           id="mem-img"
@@ -32,7 +32,7 @@ export default function MemoryInfo({
           <h3 id="modal-date">
             {dateRef.current && dateRef.current[currentImg.current]}
           </h3>
-          <h3>Description</h3>
+          <h3>Story</h3>
           <p id="model-info">
             {infoRef.current && infoRef.current[currentImg.current]}
           </p>

@@ -75,7 +75,7 @@ function AddForm({}: FormProps) {
         </div>
         <div className="input-group">
           <label htmlFor="memoryName">
-            Memory Info - 500 words
+            Memory Story - 500 words
             {isInfoMax ? <b style={{ color: "red" }}> - max word</b> : ""}
           </label>
           <textarea
