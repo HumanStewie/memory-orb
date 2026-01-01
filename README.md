@@ -1,7 +1,7 @@
 # 記憶のオーブ - Memory Orb
 
 <p align="center">
-<a href="https://memory-orb.vercel.app/"><img src="./frontend/public/TitleCard.png" alt="TitleCard" width="500" /></p></a>
+<a href="https://memory-orb.vercel.app/"><img src="./frontend/public/TitleCard.png" alt="TitleCard" width="600" /></p></a>
 <p align="middle">
 <i>記憶のオーブ, a beautiful showcase of nostalgia. </i>
 </p>
@@ -74,7 +74,7 @@ npx vite
 
 ## Video Demo + General structures
 <p align="center">
-<a><img src="./frontend/public/Demo.png" alt="TitleCard" width="400" /></a></p>
+<a><img src="./frontend/public/Demo.png" alt="TitleCard" width="600" /></a></p>
 <p align="middle">
 <i>Click on the image for the video!</i>
 </p>
