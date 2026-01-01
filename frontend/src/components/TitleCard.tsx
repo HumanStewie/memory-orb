@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 
 const bgm = new Howl({
   src: ["/Benoît Pioulard - Stanza IV - 01 Xaipe.mp3"],

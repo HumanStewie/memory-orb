@@ -10,7 +10,7 @@ import gsap from "gsap";
 import MemoryName from "./MemoryName";
 import MemoryInfo from "./MemoryInfo";
 import { GoogleGenAI } from "@google/genai";
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 
 const turnRight = new Howl({
   src: ["/turn right.wav"],
@@ -29,18 +29,18 @@ const hover = new Howl({
   volume: 0.0,
   loop: true,
   onfade: function () {
-    if (this.volume() < 0.1 && !isHovering) {
-      this.stop();
+    if (hover.volume() < 0.1 && !isHovering) {
+      hover.stop();
     }
   },
 });
 
 interface IcoProps {
   currentImg: React.RefObject<number>;
-  nameRef: React.RefObject<any[]>;
-  dateRef: React.RefObject<any[]>;
-  infoRef: React.RefObject<any[]>;
-  imgRef: React.RefObject<any[]>;
+  nameRef: React.RefObject<any[] | null>;
+  dateRef: React.RefObject<any[] | null>;
+  infoRef: React.RefObject<any[] | null>;
+  imgRef: React.RefObject<any[] | null>;
   texRef: React.RefObject<THREE.Texture[]>;
 }
 
@@ -70,9 +70,9 @@ export default function MainIco({
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash-lite",
         contents: `
-        Memory Name: "${nameRef.current[index]}",
-        Memory Description: "${infoRef.current[index]}",
-        Date: "${dateRef.current[index]}",
+        Memory Name: "${nameRef.current && nameRef.current[index]}",
+        Memory Description: "${infoRef.current && infoRef.current[index]}",
+        Date: "${dateRef.current && dateRef.current[index]}",
         This is for my "Memory Cube" webapp, where user can upload a memory with name, description and a date. From these information, please generate a 10 to 30 words motivational sentence relating to that memory, similar to the small yellow text on Minecraft splash texts on the title screen, also take inspiration from ending quotes of Cowboy bebop, stuff like: "See you space cowboy..." or "Youre gonna carry that weight", be a bit realistic but also a bit romantic in the language. Furthermore, you could take inspirations from other popular media like Death stranding with its message of "keep on keeping on" and Cyberpunk 2077 "Never stop fighting". Additionally, no quotation marks!.
         `,
       });

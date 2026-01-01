@@ -4,10 +4,9 @@ interface FormProps {
   onClick?: () => void;
 }
 
-function AddForm({ onClick }: FormProps) {
+function AddForm({ }: FormProps) {
   // All our states
   const [active, setActive] = useState(false);
-  const [isFile, setIsFile] = useState(true);
   const [isMax, setIsMax] = useState(false);
   const [isInfoMax, setIsInfoMax] = useState(false);
 
@@ -93,7 +92,7 @@ function AddForm({ onClick }: FormProps) {
           <input type="file" id="memoryImage" name="memoryImage"></input>
         </div>
         <button type="submit" className="btn-form">
-          {isFile ? "Add Memory" : "Add Memory - no image found."}
+          {"Add Memory"}
         </button>
       </form>
     </div>

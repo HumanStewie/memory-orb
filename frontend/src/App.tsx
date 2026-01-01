@@ -59,12 +59,12 @@ function App() {
   const [active, setActive] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const currentImg = useRef(0);
-  const nameRef = useRef(null);
-  const infoRef = useRef(null);
-  const dateRef = useRef(null);
+  const nameRef = useRef<any[]>(null);
+  const infoRef = useRef<any[]>(null);
+  const dateRef = useRef<any[]>(null);
   const idRef = useRef(null);
   const texRef = useRef<THREE.Texture[]>([]);
-  const imgRef = useRef(null);
+  const imgRef = useRef<any[]>(null);
   const loader = new THREE.TextureLoader();
 
   // We load up all our informations into our refs as a list
@@ -116,7 +116,6 @@ function App() {
               nameRef={nameRef}
               dateRef={dateRef}
               infoRef={infoRef}
-              idRef={idRef}
               texRef={texRef}
               currentImg={currentImg}
               imgRef={imgRef}

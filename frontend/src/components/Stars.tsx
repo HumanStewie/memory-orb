@@ -1,12 +1,7 @@
 import { Stars } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import gsap from "gsap";
 import { useRef } from "react";
 import * as THREE from "three";
-
-interface Props {
-  speed: number;
-}
 
 export default function StarSystem() {
   const starsRef = useRef<THREE.Points>(null!);
