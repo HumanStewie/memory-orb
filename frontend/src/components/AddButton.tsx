@@ -4,23 +4,28 @@ interface FormProps {
   onClick?: () => void;
 }
 
-function AddForm({ }: FormProps) {
+function AddForm({}: FormProps) {
   // All our states
   const [active, setActive] = useState(false);
   const [isMax, setIsMax] = useState(false);
   const [isInfoMax, setIsInfoMax] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Send our form data to our backend using POST
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/memory`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/memory`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        }
+      );
       if (response.ok) {
         setActive(true);
         window.location.reload();
@@ -47,7 +52,9 @@ function AddForm({ }: FormProps) {
       }`}
     >
       <form
-        className={`memory-form ${active ? "memory-done" : "memory-start"}`}
+        className={`memory-form ${active ? "memory-done" : "memory-start"} ${
+          isSubmitting ? "loading-dots" : ""
+        }`}
         onSubmit={handleSubmit}
       >
         <h2 className="add-title">Add a Memory</h2>
@@ -92,7 +99,7 @@ function AddForm({ }: FormProps) {
           <input type="file" id="memoryImage" name="memoryImage"></input>
         </div>
         <button type="submit" className="btn-form">
-          {"Add Memory"}
+          {isSubmitting ? "Adding Memory" : "Add Memory"}
         </button>
       </form>
     </div>
