@@ -32,7 +32,7 @@ function PostProcess() {
 const fetchMemories = async () => {
   const token = localStorage.getItem("token");
   try {
-    const response = await fetch(`${import.meta.env.BACKEND_URL}/get_memory`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get_memory`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -62,7 +62,6 @@ function App() {
   const texRef = useRef<THREE.Texture[]>([]);
   const imgRef = useRef<any[]>(null);
   const loader = new THREE.TextureLoader();
-
   // We load up all our informations into our refs as a list
   useEffect(() => {
     const loadRefs = async () => {

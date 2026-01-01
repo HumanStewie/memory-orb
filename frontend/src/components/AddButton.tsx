@@ -16,7 +16,7 @@ function AddForm({ }: FormProps) {
     const formData = new FormData(e.currentTarget);
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`${import.meta.env.BACKEND_URL}/memory`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/memory`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

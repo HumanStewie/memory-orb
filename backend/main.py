@@ -1,5 +1,5 @@
-from models import Users, Memory
-from database import engine, secret_key, algorithm, expire_time
+from .models import Users, Memory
+from .database import engine, secret_key, algorithm, expire_time
 from sqlmodel import SQLModel, Session, select
 from fastapi import FastAPI, Depends, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 import jwt
 from jwt.exceptions import InvalidTokenError
 from datetime import timedelta, datetime, timezone
-from storage import uploadImage, get_url
+from .storage import uploadImage, get_url
 
 
 app = FastAPI()
