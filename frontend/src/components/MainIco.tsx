@@ -367,7 +367,7 @@ export default function MainIco({
             });
           }
           hover.play();
-          hover.fade(hover.volume(), 0.033, 1000);
+          hover.fade(hover.volume(), 0.045, 1000);
         }}
         onPointerLeave={() => {
           if (mat1Ref.current) {
