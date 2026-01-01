@@ -242,17 +242,6 @@ export default function MainIco({
       <Html occlude="blending">
         <div
           className="arrow-right"
-          onMouseEnter={() => {
-            isHovering = true;
-            if (!hover.playing()) {
-              hover.play();
-            }
-            hover.fade(hover.volume(), 0.2, 1000);
-          }}
-          onMouseLeave={() => {
-            isHovering = false;
-            hover.fade(hover.volume(), 0, 1000);
-          }}
           onClick={() => {
             if (!tl.isActive()) {
               turnRight.play();
@@ -274,17 +263,6 @@ export default function MainIco({
         ></div>
         <div
           className="arrow-left"
-          onMouseEnter={() => {
-            isHovering = true;
-            if (!hover.playing()) {
-              hover.play();
-            }
-            hover.fade(hover.volume(), 0.2, 1000);
-          }}
-          onMouseLeave={() => {
-            isHovering = false;
-            hover.fade(hover.volume(), 0, 1000);
-          }}
           onClick={() => {
             if (!tl.isActive()) {
               turnLeft.play();
@@ -305,17 +283,6 @@ export default function MainIco({
         ></div>
         <div
           className="arrow-down"
-          onMouseEnter={() => {
-            isHovering = true;
-            if (!hover.playing()) {
-              hover.play();
-            }
-            hover.fade(hover.volume(), 0.2, 1000);
-          }}
-          onMouseLeave={() => {
-            isHovering = false;
-            hover.fade(hover.volume(), 0, 1000);
-          }}
           onClick={() => {
             if (!tl.isActive()) {
               turnDown.play();
@@ -347,17 +314,6 @@ export default function MainIco({
       <Html position={[0, -9, 0]} rotation={[0, 0, 0]} zIndexRange={[100, 0]}>
         <div
           className="arrow-up"
-          onMouseEnter={() => {
-            isHovering = true;
-            if (!hover.playing()) {
-              hover.play();
-            }
-            hover.fade(hover.volume(), 0.2, 1000);
-          }}
-          onMouseLeave={() => {
-            isHovering = false;
-            hover.fade(hover.volume(), 0, 1000);
-          }}
           onClick={() => {
             if (!tl.isActive()) {
               turnDown.play();
@@ -411,7 +367,7 @@ export default function MainIco({
             });
           }
           hover.play();
-          hover.fade(hover.volume(), 0.2, 1000);
+          hover.fade(hover.volume(), 0.05, 1000);
         }}
         onPointerLeave={() => {
           if (mat1Ref.current) {
