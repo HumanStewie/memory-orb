@@ -79,8 +79,8 @@ async def read_users_me(current_user = Depends(get_current_user)):
     return current_user
 
 @app.get("/")
-async def show():
-    return "Hello"
+async def read_root():
+    return {"Python" : "Hello"}
 
 @app.post("/signup")
 async def signup(data : LoginData, session : Session = Depends(get_session)):
