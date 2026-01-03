@@ -131,3 +131,9 @@ npx vite
 1. CSS: They do not work for different resolutions or anything other than desktops as far as I know.
 2. Login, submit, delete buttons does not have indicators showing they are fetching data. (Fixed ✅)
 3. The buzzing sound on hover gets progressively louder if the user hover over and over again.
+
+## Music Credits
+These are the music (even unused ones) saved within `frontend/public` directory:
+1. [Stone In Focus - Aphex Twin](https://youtu.be/q86g1aop6a8?si=t5h1eLGaEo202Xof)
+2. [Remembering - Alex Bainter](https://alexbainter.bandcamp.com/album/remembering-excerpts)
+3. [Xaipe - Album Stanza IV - Benoît Pioulard](https://pioulard.bandcamp.com/album/stanza-iv)
