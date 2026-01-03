@@ -120,7 +120,7 @@ export default function Login({ idRef, currentImg }: Props) {
       <button className="logout-btn" onClick={handleLogout}>
         Log Out
       </button>
-      <button className={"delete-btn " + isDeleting ? "loading-dots" : ""} onClick={handleDelete}>
+      <button className={`delete-btn ${isDeleting ? "loading-dots" : ""}`} onClick={handleDelete}>
         {isDeleting ? "Deleting" : "Delete Memory"}
       </button>
       <div className={`login-overlay ${login ? "login-overlay-done" : ""}`}>
@@ -177,7 +177,7 @@ export default function Login({ idRef, currentImg }: Props) {
               placeholder="shhhhhh"
             ></input>
           </div>
-          <button type="submit" className={"btn-login " + isDeleting ? "loading-dots" : ""} value={"login"}>
+          <button type="submit" className={`btn-login ${isDeleting ? "loading-dots" : ""}`} value={"login"}>
             {isSignup
               ? isAuth
                 ? isRegistering ? "Signing Up" : "Sign Up"
