@@ -74,7 +74,7 @@ npx vite
 
 ## Video Demo + General structures
 <p align="center">
-<a><img src="./frontend/public/Demo.png" alt="TitleCard" width="600" /></a></p>
+<a href="https://youtu.be/9B7VxRgDfnw"><img src="./frontend/public/Demo.png" alt="TitleCard" width="600" /></a></p>
 <p align="middle">
 <i>Click on the image for the video!</i>
 </p>
