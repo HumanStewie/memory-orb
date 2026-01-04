@@ -10,7 +10,7 @@
 
 ## InnovArt 2026
 
-This is a submission to the hackathon [InnovArt 2026](https://devpost.com/software/memory-cube?ref_content=my-projects-tab&ref_feature=my_projects)
+This is a submission to the hackathon [InnovArt 2026](https://devpost.com/software/memory-cube?ref_content=my-projects-tab&ref_feature=my_projects).
 **It won 2nd place!**
 
 ## Inspiration
