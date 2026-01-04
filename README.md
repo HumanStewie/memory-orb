@@ -8,6 +8,11 @@
 
 <p align="center"><b>Memory Orb is a simple, yet mesmerizing, memory showcase for you to store precious moments in our fleeting life.</b></p>
 
+## InnovArt 2026
+
+This is a submission to the hackathon [InnovArt 2026](https://devpost.com/software/memory-cube?ref_content=my-projects-tab&ref_feature=my_projects)
+**It won 2nd place!**
+
 ## Inspiration
 
 I have always been a person who gets nostalgic often. At gatherings with university friends, laughing and bantering, I'd remember the high school days when I was similarly excited and happy. But just as often, I'd get sad thinking about those days. Perhaps I didn't experience it fully? Or is it that I was trying too hard to fit in that I forgot about the "now"? It always felt like those moments went by so suddenly, one second you're having the time of your life, and the next you're reminiscing about it. I wonder, how can I capture these fleeting moments and tell a story with it? I want to be able to flip - similar to flipping pages in a book - through my memories like a story.
