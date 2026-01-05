@@ -14,7 +14,7 @@ This is a submission to the hackathon [InnovArt 2026](https://devpost.com/softwa
 **It won 2nd place!**
 
 <p align="center">
-  <img src="./frontend/public/innovart-second.png" width="800"/>
+  <img src="./frontend/public/innovart-second.png" width="700"/>
 </p>
 
 ## Inspiration
